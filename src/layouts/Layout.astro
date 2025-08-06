@@ -682,8 +682,7 @@ const {
 	}
 
 	.header-right {
-		display: flex;
-		align-items: center;
+		display: none; /* Hide navigation on all devices */
 	}
 
 	.main-nav {
@@ -2020,5 +2019,32 @@ const {
 		transition: all 0.3s ease;
 		color: #453910;
 		filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+	}
+
+	/* Mobile-specific header improvements */
+	@media (max-width: 768px) {
+		header {
+			padding: 1rem 0;
+		}
+
+		.header-content {
+			padding: 0 1rem;
+		}
+
+		.site-logo-text {
+			font-size: 22px;
+			letter-spacing: 0.5px;
+		}
+
+		.header-right {
+			display: none; /* Hide right-side navigation on mobile */
+		}
+	}
+
+	@media (max-width: 480px) {
+		.site-logo-text {
+			font-size: 18px;
+			letter-spacing: 0.3px;
+		}
 	}
 </style>
