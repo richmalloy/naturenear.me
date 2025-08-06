@@ -1,0 +1,168 @@
+---
+const { lat, lng, locationName } = Astro.props;
+
+let heritageData = null;
+let error = null;
+
+try {
+  console.log(`🏺 Fetching REAL archaeology data for ${locationName} (${lat}, ${lng})`);
+  
+  // First try Wikipedia/Wikimedia API for nearby historical sites
+  const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/nearby?lat=${lat}&lng=${lng}&radius=50000&limit=20`;
+  
+  const response = await fetch(wikiUrl);
+  if (!response.ok) throw new Error(`Wikipedia API error: ${response.status}`);
+  
+  const data = await response.json();
+  
+  // Filter for likely archaeological/historical sites
+  const historicalSites = data.pages
+    ?.filter(page => {
+      const title = page.title.toLowerCase();
+      return title.includes("archaeological") || 
+             title.includes("historic") || 
+             title.includes("monument") || 
+             title.includes("ruins") || 
+             title.includes("fort") || 
+             title.includes("castle") || 
+             title.includes("mission") ||
+             title.includes("cemetery") ||
+             title.includes("battlefield");
+    })
+    .map(page => ({
+      name: page.title,
+      lat: page.coordinates?.lat || lat,
+      lng: page.coordinates?.lon || lng,
+      description: page.extract || "Historical site",
+      type: "historic",
+      distance: page.coordinates ? 
+        Math.round(Math.sqrt(
+          Math.pow((page.coordinates.lat - lat) * 111, 2) + 
+          Math.pow((page.coordinates.lon - lng) * 111, 2)
+        )) : 0
+    })) || [];
+  
+  if (historicalSites.length > 0) {
+    heritageData = historicalSites.sort((a, b) => a.distance - b.distance);
+    console.log(`✅ REAL heritage data fetched for ${locationName}: ${heritageData.length} sites`);
+  } else {
+    throw new Error('No Wikipedia sites found');
+  }
+} catch (e) {
+  console.warn(`⚠️ Wikipedia API failed for ${locationName}, using demo data:`, e.message);
+  error = e.message;
+  
+  // Fallback to static dataset of major archaeological sites
+  const sites = [
+    // Southwest USA
+    {name: "Chaco Canyon", lat: 36.0607, lng: -107.9609, description: "Major ancestral Puebloan cultural center (900-1150 CE)", type: "archaeological_site"},
+    {name: "Mesa Verde", lat: 37.1853, lng: -108.4618, description: "Cliff dwellings of ancestral Puebloans (600-1300 CE)", type: "archaeological_site"},
+    {name: "Canyon de Chelly", lat: 36.1531, lng: -109.3368, description: "Ancient Puebloan ruins and rock art", type: "archaeological_site"},
+    {name: "Bandelier", lat: 35.778, lng: -106.2708, description: "Ancestral Puebloan dwellings and petroglyphs", type: "archaeological_site"},
+    
+    // Midwest USA  
+    {name: "Cahokia Mounds", lat: 38.6551, lng: -90.0634, description: "Mississippian culture ceremonial center (1050-1200 CE)", type: "archaeological_site"},
+    {name: "Serpent Mound", lat: 39.0203, lng: -83.4309, description: "Ancient serpent-shaped earthwork (1000 BCE)", type: "archaeological_site"},
+    
+    // Southeast USA
+    {name: "Moundville", lat: 32.9976, lng: -87.6256, description: "Mississippian period mound complex", type: "archaeological_site"},
+    
+    // Northeast USA
+    {name: "Colonial Williamsburg", lat: 37.2707, lng: -76.7075, description: "Restored 18th-century colonial capital", type: "historic"},
+    
+    // West Coast
+    {name: "Mission San Juan Capistrano", lat: 33.5017, lng: -117.6628, description: "Historic Spanish mission (1776)", type: "mission"}
+  ];
+  
+  // Calculate distances and find nearby sites
+  heritageData = sites
+    .map(site => ({
+      ...site,
+      distance: Math.round(Math.sqrt(
+        Math.pow((site.lat - lat) * 111, 2) + 
+        Math.pow((site.lng - lng) * 111, 2)
+      ))
+    }))
+    .filter(site => site.distance <= 300)
+    .sort((a, b) => a.distance - b.distance);
+  
+  console.log(`📊 Using demo heritage data for ${locationName}: ${heritageData.length} sites`);
+}
+
+function getTypeEmoji(type) {
+  const typeEmojis = {
+    archaeological_site: "🏛️",
+    castle: "🏰",
+    church: "⛪",
+    monument: "🗿",
+    ruins: "⚱️",
+    cemetery: "⚰️",
+    battlefield: "⚔️",
+    fort: "🛡️",
+    mission: "⛪",
+    historic: "🏺",
+    building: "🏢"
+  };
+  return typeEmojis[type] || "🏺";
+}
+---
+
+<section id="heritage" class="data-section heritage-widget">
+  <h2>🏺 Archaeological Sites & Historic Landmarks</h2>
+  <div id="heritage-data">
+    {heritageData && heritageData.length > 0 ? (
+      <div>
+        <p>📍 Found {heritageData.length} historical sites near {locationName} {error ? `(using fallback data)` : `from Wikipedia`}</p>
+        <ul class="data-list">
+          {heritageData.slice(0, 6).map(site => (
+            <li class="heritage-item">
+              <div>
+                <strong>{getTypeEmoji(site.type)} {site.name}</strong><br/>
+                {site.description}<br/>
+                <small style="color: #ccc;">Distance: {site.distance}km</small>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="no-data">
+        <p>🧭 No documented archaeological sites found within 300km of {locationName}.</p>
+        <p>This region may have undocumented sites or require specialized databases. {error}</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .heritage-widget {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(160, 82, 45, 0.05) 100%);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+  }
+  
+  .heritage-item {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #8B4513;
+    transition: all 0.2s ease;
+  }
+  
+  .heritage-item:hover {
+    background: rgba(139, 69, 19, 0.15);
+    transform: translateX(4px);
+  }
+  
+  .heritage-item strong {
+    color: #8B4513;
+    font-size: 1.1rem;
+  }
+  
+  .no-data {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+  }
+</style>

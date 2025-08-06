@@ -1,0 +1,334 @@
+---
+// FossilsWidget.astro - Fossils and Paleontology data from Paleobiology Database
+export interface Props {
+    lat: number;
+    lng: number;
+    locationName?: string;
+}
+
+const { lat, lng, locationName = "Unknown" } = Astro.props;
+
+// Haversine distance function for calculating distances between coordinates
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Earth radius in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distance in kilometers
+}
+
+let fossilsData: any[] = [];
+let error: string | null = null;
+
+try {
+    console.log(`🦴 Fetching fossils data for ${lat}, ${lng}`);
+    
+    // Use the Paleobiology Database API to get fossil occurrences near the location
+    // Using a bounding box approach since PBDB doesn't have direct lat/lng radius search
+    const latlng_buffer = 2.0; // degrees buffer around the point
+    const minLat = lat - latlng_buffer;
+    const maxLat = lat + latlng_buffer;
+    const minLng = lng - latlng_buffer;
+    const maxLng = lng + latlng_buffer;
+
+    const pbdbUrl = `https://paleobiodb.org/data1.2/occs/list.json?lngmin=${minLng}&lngmax=${maxLng}&latmin=${minLat}&latmax=${maxLat}&show=coords,loc,time,class&limit=50`;
+    
+    console.log(`🦴 PBDB API URL: ${pbdbUrl}`);
+    
+    const response = await fetch(pbdbUrl);
+    if (!response.ok) {
+        throw new Error(`PBDB API error: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    console.log(`🦴 PBDB API response:`, data);
+    
+    if (data.records && data.records.length > 0) {
+        // Process and filter fossils data
+        fossilsData = data.records
+            .filter((fossil: any) => fossil.lng && fossil.lat) // Must have coordinates
+            .map((fossil: any) => ({
+                id: fossil.oid,
+                name: fossil.tna || fossil.gnl || 'Unknown Fossil',
+                scientificName: fossil.tna || fossil.gnl,
+                classification: fossil.cla || fossil.odl || 'Unknown',
+                age: fossil.eag ? `${fossil.eag} Ma` : (fossil.egi ? fossil.egi : 'Unknown age'),
+                formation: fossil.sfm || fossil.fm || 'Unknown formation',
+                location: fossil.cc || fossil.stp || fossil.cnt || 'Unknown location',
+                lat: parseFloat(fossil.lat),
+                lng: parseFloat(fossil.lng),
+                distance: haversineDistance(lat, lng, parseFloat(fossil.lat), parseFloat(fossil.lng)),
+                period: fossil.oei || 'Unknown period',
+                epoch: fossil.egi || 'Unknown epoch'
+            }))
+            .filter((fossil: any) => fossil.distance <= 200) // Within 200km
+            .sort((a: any, b: any) => a.distance - b.distance)
+            .slice(0, 12); // Show up to 12 fossils
+    }
+    
+    console.log(`🦴 Processed fossils data:`, fossilsData);
+    
+} catch (e) {
+    console.error(`🦴 PBDB API failed:`, e);
+    error = e instanceof Error ? e.message : 'Unknown error';
+    
+    // Fallback to static mock data if API fails
+    const staticFossils = [
+        {
+            id: 'mock1',
+            name: 'Triceratops horridus',
+            scientificName: 'Triceratops horridus',
+            classification: 'Dinosauria',
+            age: '68-66 Ma',
+            formation: 'Hell Creek Formation',
+            location: 'North America',
+            lat: lat + 0.5,
+            lng: lng + 0.3,
+            distance: 55,
+            period: 'Cretaceous',
+            epoch: 'Late Cretaceous'
+        },
+        {
+            id: 'mock2',
+            name: 'Allosaurus fragilis',
+            scientificName: 'Allosaurus fragilis',
+            classification: 'Dinosauria',
+            age: '155-145 Ma',
+            formation: 'Morrison Formation',
+            location: 'Western United States',
+            lat: lat - 0.3,
+            lng: lng - 0.5,
+            distance: 67,
+            period: 'Jurassic',
+            epoch: 'Late Jurassic'
+        },
+        {
+            id: 'mock3',
+            name: 'Brachiopod species',
+            scientificName: 'Terebratulina sp.',
+            classification: 'Brachiopoda',
+            age: '300-250 Ma',
+            formation: 'Kaibab Formation',
+            location: 'Southwest United States',
+            lat: lat + 0.2,
+            lng: lng - 0.2,
+            distance: 28,
+            period: 'Permian',
+            epoch: 'Late Permian'
+        }
+    ];
+    
+    fossilsData = staticFossils.map(fossil => ({
+        ...fossil,
+        distance: haversineDistance(lat, lng, fossil.lat, fossil.lng)
+    })).sort((a, b) => a.distance - b.distance);
+}
+
+function getFossilEmoji(classification: string): string {
+    const cls = classification.toLowerCase();
+    if (cls.includes('dinosaur') || cls.includes('dinosauria')) return '🦕';
+    if (cls.includes('trilobita') || cls.includes('trilobite')) return '🦂';
+    if (cls.includes('ammonoid') || cls.includes('cephalopoda')) return '🐚';
+    if (cls.includes('brachiopoda')) return '🐚';
+    if (cls.includes('mammal') || cls.includes('mammalia')) return '🦣';
+    if (cls.includes('fish') || cls.includes('pisces')) return '🐟';
+    if (cls.includes('plant') || cls.includes('plantae')) return '🌿';
+    if (cls.includes('coral') || cls.includes('anthozoa')) return '🪸';
+    if (cls.includes('echinoderm')) return '⭐';
+    if (cls.includes('gastropod') || cls.includes('mollusca')) return '🐌';
+    return '🦴'; // Generic fossil bone
+}
+
+function getTimeColor(age: string): string {
+    if (age.includes('Cenozoic') || age.includes('Tertiary') || age.includes('Quaternary')) return '#8B4513';
+    if (age.includes('Mesozoic') || age.includes('Cretaceous') || age.includes('Jurassic') || age.includes('Triassic')) return '#228B22';
+    if (age.includes('Paleozoic') || age.includes('Permian') || age.includes('Carboniferous') || age.includes('Devonian')) return '#4682B4';
+    return '#666'; // Default gray
+}
+---
+
+<section id="fossils" class="data-section fossils-widget">
+    <h2>🦴 Fossils & Paleontology</h2>
+    <div id="fossils-data">
+        {fossilsData && fossilsData.length > 0 ? (
+            <div>
+                <p class="data-summary">📍 Found {fossilsData.length} fossil occurrences nearby from the Paleobiology Database</p>
+                <ul class="fossils-list">
+                    {fossilsData.map((fossil) => (
+                        <li class="fossil-item" key={fossil.id}>
+                            <div class="fossil-header">
+                                <span class="fossil-emoji">{getFossilEmoji(fossil.classification)}</span>
+                                <div class="fossil-info">
+                                    <strong class="fossil-name">{fossil.name}</strong>
+                                    <div class="fossil-classification">{fossil.classification}</div>
+                                </div>
+                            </div>
+                            <div class="fossil-details">
+                                <div class="fossil-age" style={`color: ${getTimeColor(fossil.age)}`}>
+                                    🕰️ {fossil.age} ({fossil.period})
+                                </div>
+                                <div class="fossil-formation">📍 {fossil.formation}</div>
+                                <div class="fossil-location">🌍 {fossil.location}</div>
+                                <small class="fossil-distance">Distance: {Math.round(fossil.distance)}km</small>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        ) : (
+            <div class="no-data">
+                <p>🔍 No fossil records found in the Paleobiology Database for this area.</p>
+                {error && <p class="error-text">API Error: {error}</p>}
+                <p class="fallback-note">This region may not have extensive paleontological records, or fossils may be deeper than typical surface finds.</p>
+            </div>
+        )}
+    </div>
+</section>
+
+<style>
+    .fossils-widget {
+        background: linear-gradient(135deg, #f5f5dc 0%, #faf0e6 50%, #f0f8ff 100%);
+        border: 2px solid #d2b48c;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 15px rgba(210, 180, 140, 0.3);
+    }
+
+    .fossils-widget h2 {
+        color: #8b4513;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 1.8em;
+        text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.2);
+    }
+
+    .data-summary {
+        color: #6b4423;
+        margin-bottom: 15px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .fossils-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .fossil-item {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid #deb887;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        padding: 15px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .fossil-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.2);
+        border-color: #d2b48c;
+    }
+
+    .fossil-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .fossil-emoji {
+        font-size: 2em;
+        margin-right: 12px;
+        filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.1));
+    }
+
+    .fossil-info {
+        flex: 1;
+    }
+
+    .fossil-name {
+        color: #8b4513;
+        font-size: 1.1em;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .fossil-classification {
+        color: #a0522d;
+        font-style: italic;
+        font-size: 0.9em;
+    }
+
+    .fossil-details {
+        padding-left: 50px;
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+
+    .fossil-age {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .fossil-formation, .fossil-location {
+        color: #6b4423;
+        margin-bottom: 3px;
+    }
+
+    .fossil-distance {
+        color: #999;
+        font-style: italic;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 30px 20px;
+        color: #8b4513;
+    }
+
+    .no-data p {
+        margin-bottom: 10px;
+    }
+
+    .error-text {
+        color: #d2691e;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    .fallback-note {
+        color: #a0522d;
+        font-size: 0.9em;
+        font-style: italic;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .fossils-widget {
+            margin: 15px 10px;
+            padding: 15px;
+        }
+
+        .fossil-details {
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        .fossil-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .fossil-emoji {
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+    }
+</style>

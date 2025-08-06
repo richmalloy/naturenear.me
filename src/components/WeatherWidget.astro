@@ -1,0 +1,311 @@
+---
+export interface Props {
+  lat: number;
+  lng: number;
+  locationName: string;
+}
+
+const { lat, lng, locationName } = Astro.props;
+
+let weatherData = null;
+let error = null;
+
+try {
+  console.log(`🌦️ Fetching weather for ${locationName} (${lat}, ${lng})`);
+  
+  const response = await fetch(`https://wttr.in/${lat},${lng}?format=j1`);
+  if (!response.ok) throw new Error(`Weather API error: ${response.status}`);
+  
+  weatherData = await response.json();
+  console.log(`✅ Weather data fetched for ${locationName}`);
+} catch (e) {
+  console.error(`❌ Weather fetch failed for ${locationName}:`, e);
+  error = e.message;
+}
+
+// Helper function to format weather data
+function formatWeatherData(data) {
+  if (!data || !data.current_condition?.[0]) return null;
+  
+  const current = data.current_condition[0];
+  const today = data.weather?.[0];
+  const tomorrow = data.weather?.[1];
+  
+  return {
+    current: {
+      temp: current.temp_F,
+      feelsLike: current.FeelsLikeF,
+      condition: current.weatherDesc?.[0]?.value || 'Unknown',
+      humidity: current.humidity,
+      windSpeed: current.windspeedMiles,
+      windDir: current.winddir16Point,
+      uvIndex: current.uvIndex
+    },
+    today: today ? {
+      maxTemp: today.maxtempF,
+      minTemp: today.mintempF,
+      condition: today.hourly?.[4]?.weatherDesc?.[0]?.value || 'Unknown'
+    } : null,
+    tomorrow: tomorrow ? {
+      maxTemp: tomorrow.maxtempF,
+      minTemp: tomorrow.mintempF,
+      condition: tomorrow.hourly?.[4]?.weatherDesc?.[0]?.value || 'Unknown'
+    } : null
+  };
+}
+
+const weather = weatherData ? formatWeatherData(weatherData) : null;
+
+// Get weather emoji based on condition
+function getWeatherEmoji(condition) {
+  const lower = condition?.toLowerCase() || '';
+  if (lower.includes('sunny') || lower.includes('clear')) return '☀️';
+  if (lower.includes('cloud')) return '☁️';
+  if (lower.includes('rain')) return '🌧️';
+  if (lower.includes('storm')) return '⛈️';
+  if (lower.includes('snow')) return '❄️';
+  if (lower.includes('fog') || lower.includes('mist')) return '🌫️';
+  return '🌤️';
+}
+---
+
+<section id="weather" class="data-section weather-widget">
+  <h2>🌦️ Weather & Forecast</h2>
+  
+  {error ? (
+    <div class="weather-error">
+      <p>⚠️ Unable to load weather data for {locationName}</p>
+      <p class="error-details">{error}</p>
+    </div>
+  ) : !weather ? (
+    <div class="weather-loading">
+      <p>🔄 Loading weather data for {locationName}...</p>
+    </div>
+  ) : (
+    <div class="weather-content">
+      <div class="current-weather">
+        <div class="current-temp">
+          <span class="temp-value">{weather.current.temp}°F</span>
+          <span class="feels-like">Feels like {weather.current.feelsLike}°F</span>
+        </div>
+        <div class="current-condition">
+          <span class="weather-emoji">{getWeatherEmoji(weather.current.condition)}</span>
+          <span class="condition-text">{weather.current.condition}</span>
+        </div>
+      </div>
+      
+      <div class="weather-details">
+        <div class="detail-item">
+          <span class="detail-label">💧 Humidity</span>
+          <span class="detail-value">{weather.current.humidity}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">💨 Wind</span>
+          <span class="detail-value">{weather.current.windSpeed} mph {weather.current.windDir}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">☀️ UV Index</span>
+          <span class="detail-value">{weather.current.uvIndex}</span>
+        </div>
+      </div>
+      
+      {weather.today && weather.tomorrow && (
+        <div class="forecast">
+          <div class="forecast-day">
+            <h4>Today</h4>
+            <div class="forecast-temps">
+              <span class="high">{weather.today.maxTemp}°</span>
+              <span class="low">{weather.today.minTemp}°</span>
+            </div>
+            <div class="forecast-condition">
+              {getWeatherEmoji(weather.today.condition)} {weather.today.condition}
+            </div>
+          </div>
+          <div class="forecast-day">
+            <h4>Tomorrow</h4>
+            <div class="forecast-temps">
+              <span class="high">{weather.tomorrow.maxTemp}°</span>
+              <span class="low">{weather.tomorrow.minTemp}°</span>
+            </div>
+            <div class="forecast-condition">
+              {getWeatherEmoji(weather.tomorrow.condition)} {weather.tomorrow.condition}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div class="weather-location">
+        <small>📍 {locationName}</small>
+      </div>
+    </div>
+  )}
+</section>
+
+<style>
+.weather-widget {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-content {
+  color: white;
+}
+
+.current-weather {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.current-temp {
+  display: flex;
+  flex-direction: column;
+}
+
+.temp-value {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.feels-like {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+.current-condition {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.weather-emoji {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.condition-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.forecast {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.forecast-day {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.forecast-day h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.forecast-temps {
+  margin-bottom: 0.5rem;
+}
+
+.high {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.low {
+  opacity: 0.7;
+  font-size: 1rem;
+}
+
+.forecast-condition {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.weather-location {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.weather-error, .weather-loading {
+  text-align: center;
+  padding: 2rem;
+  color: white;
+}
+
+.weather-error {
+  background: rgba(255, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.error-details {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .current-weather {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .current-condition {
+    align-items: center;
+  }
+  
+  .weather-details {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .forecast {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

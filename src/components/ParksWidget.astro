@@ -1,0 +1,169 @@
+---
+const { lat, lng, locationName } = Astro.props;
+
+let parksData = null;
+let error = null;
+
+// Helper function to calculate distance between two coordinates
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+try {
+  console.log(`🏞️ Fetching REAL NPS data for ${locationName} (${lat}, ${lng})`);
+  
+  // NPS API - fetch all parks first
+  const npsApiKey = "EJ8nSrh2bYkNAE28U0aBbiEAH9H7X94ek5Hilutb";
+  const npsUrl = `https://developer.nps.gov/api/v1/parks?limit=50&start=0&api_key=${npsApiKey}`;
+  
+  const response = await fetch(npsUrl);
+  if (!response.ok) throw new Error(`NPS API error: ${response.status}`);
+  
+  const data = await response.json();
+  
+  // Calculate distances and filter nearby parks
+  const allParks = data.data || [];
+  const nearby = allParks
+    .filter(park => park.latitude && park.longitude)
+    .map(park => ({
+      ...park,
+      distance: haversineDistance(
+        lat, lng, 
+        parseFloat(park.latitude), 
+        parseFloat(park.longitude)
+      )
+    }))
+    .filter(park => park.distance <= 500) // Within 500km
+    .sort((a, b) => a.distance - b.distance);
+  
+  if (nearby.length > 0) {
+    parksData = nearby;
+    console.log(`✅ REAL NPS data fetched for ${locationName}: ${parksData.length} parks`);
+  } else {
+    throw new Error('No parks found within 500km');
+  }
+} catch (e) {
+  console.warn(`⚠️ NPS API failed for ${locationName}, using demo data:`, e.message);
+  error = e.message;
+  
+  // Fallback to static dataset of major national parks
+  const parks = [
+    // Southwest
+    {fullName: "Grand Canyon National Park", states: "AZ", latitude: "36.0544", longitude: "-112.1401", designation: "National Park", description: "Immense canyon carved by the Colorado River in Arizona"},
+    {fullName: "Zion National Park", states: "UT", latitude: "37.2982", longitude: "-113.0263", designation: "National Park", description: "Steep red cliffs and emerald pools in Utah"},
+    {fullName: "Arches National Park", states: "UT", latitude: "38.7331", longitude: "-109.5925", designation: "National Park", description: "More than 2,000 natural stone arches"},
+    {fullName: "Mesa Verde National Park", states: "CO", latitude: "37.1853", longitude: "-108.4618", designation: "National Park", description: "Ancestral Puebloan cliff dwellings"},
+    
+    // West Coast
+    {fullName: "Yosemite National Park", states: "CA", latitude: "37.8651", longitude: "-119.5383", designation: "National Park", description: "Granite cliffs, waterfalls, and giant sequoias"},
+    {fullName: "Yellowstone National Park", states: "WY,MT,ID", latitude: "44.4280", longitude: "-110.5885", designation: "National Park", description: "Geothermal features and diverse wildlife"},
+    {fullName: "Olympic National Park", states: "WA", latitude: "47.8021", longitude: "-123.6044", designation: "National Park", description: "Diverse ecosystems from coast to mountains"},
+    
+    // East Coast
+    {fullName: "Great Smoky Mountains National Park", states: "TN,NC", latitude: "35.6118", longitude: "-83.4895", designation: "National Park", description: "Ancient mountains and diverse plant life"},
+    {fullName: "Acadia National Park", states: "ME", latitude: "44.3386", longitude: "-68.2733", designation: "National Park", description: "Rocky coastline and pristine lakes"},
+    
+    // Other Regions
+    {fullName: "Everglades National Park", states: "FL", latitude: "25.2866", longitude: "-80.8987", designation: "National Park", description: "Tropical wetlands and wildlife"},
+    {fullName: "Glacier National Park", states: "MT", latitude: "48.7596", longitude: "-113.7870", designation: "National Park", description: "Pristine wilderness and mountain peaks"},
+    {fullName: "Rocky Mountain National Park", states: "CO", latitude: "40.3428", longitude: "-105.6836", designation: "National Park", description: "High elevation wilderness and alpine lakes"}
+  ];
+  
+  // Calculate distances and find nearby parks
+  parksData = parks
+    .map(park => ({
+      ...park,
+      distance: haversineDistance(
+        lat, lng, 
+        parseFloat(park.latitude), 
+        parseFloat(park.longitude)
+      )
+    }))
+    .filter(park => park.distance <= 500)
+    .sort((a, b) => a.distance - b.distance);
+  
+  console.log(`📊 Using demo NPS data for ${locationName}: ${parksData.length} parks`);
+}
+
+function getParkEmoji(designation) {
+  const designationEmojis = {
+    "National Park": "🏔️",
+    "National Monument": "🗿",
+    "National Historic Site": "🏛️",
+    "National Recreation Area": "🏞️",
+    "National Preserve": "🌲",
+    "National Memorial": "🏛️",
+    "National Battlefield": "⚔️",
+    "National Seashore": "🏖️",
+    "National Lakeshore": "🏞️"
+  };
+  return designationEmojis[designation] || "🏞️";
+}
+---
+
+<section id="parks" class="data-section parks-widget">
+  <h2>🏞️ National Parks & Protected Areas</h2>
+  <div id="parks-data">
+    {parksData && parksData.length > 0 ? (
+      <div>
+        <p>📍 Found {parksData.length} national parks near {locationName} {error ? `(using fallback data)` : `from NPS database`}</p>
+        <ul class="data-list">
+          {parksData.slice(0, 6).map(park => (
+            <li class="park-item">
+              <div>
+                <strong>{getParkEmoji(park.designation)} {park.fullName}</strong><br/>
+                {park.description}<br/>
+                <small style="color: #ccc;">{park.states} • Distance: {Math.round(park.distance)}km</small>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="no-data">
+        <p>🏔️ No national parks found within 500km of {locationName}.</p>
+        <p>This may be a remote area without nearby protected lands. {error}</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .parks-widget {
+    background: linear-gradient(135deg, rgba(0, 100, 0, 0.1) 0%, rgba(46, 139, 87, 0.05) 100%);
+    border: 1px solid rgba(0, 100, 0, 0.2);
+  }
+  
+  .park-item {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background: rgba(0, 100, 0, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #006400;
+    transition: all 0.2s ease;
+  }
+  
+  .park-item:hover {
+    background: rgba(0, 100, 0, 0.15);
+    transform: translateX(4px);
+  }
+  
+  .park-item strong {
+    color: #006400;
+    font-size: 1.1rem;
+  }
+  
+  .no-data {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+  }
+</style>

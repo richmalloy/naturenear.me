@@ -1,11 +1,1747 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+	<header>
+		<div class="header-content">
+			<div class="header-left">
+				<a href="/" title="Return to Home" style="text-decoration: none; display: inline-block">
+					<div class="logo-container">
+						<img src="/images/logo.png" alt="Nature Near Me Logo" class="logo-image" width="32" height="32" loading="eager" decoding="sync" />
+						<div class="site-logo-text">Nature Near Me</div>
+					</div>
+				</a>
+			</div>
+			<div class="header-right">
+				<nav class="main-nav">
+					<a href="/" class="nav-link">Home</a>
+					<a href="/about" class="nav-link">About</a>
+					<a href="/explore" class="nav-link">Explore</a>
+					<a href="/data" class="nav-link">Data</a>
+				</nav>
+			</div>
+		</div>
+		<div class="header-sky">
+			<div class="sun header-sun"></div>
+			<div class="flying-bird">🦅</div>
+			<div class="cloud cloud-header-1"></div>
+			<div class="cloud cloud-header-2"></div>
+			<div class="cloud cloud-header-3"></div>
+		</div>
+	</header>
+
+	<main>
+		<h1 class="sr-only">Nature Near Me - Explore Wildlife, Geology, and Weather Data</h1>
+
+		<section id="location-input">
+			<p>Enter your ZIP code, city & state, or use your location:</p>
+			<div class="input-container">
+				<input type="text" id="location-input-field" placeholder="e.g. 87501 or Santa Fe, NM" />
+				<button class="input-submit-btn" onclick="useLocationInput()" title="Search">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
+				</button>
+				<div id="autocomplete-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none;"></div>
+			</div>
+			<div class="location-divider">
+				<span>or</span>
+			</div>
+			<button onclick="useGeolocation()">Use My Location</button>
+		</section>
+
+		<section id="location-confirmation">
+			<div id="confirmation-message"></div>
+		</section>
+
+		<section id="species" class="data-section">
+			<h2>🐦 Bird Life Around You</h2>
+			<div id="species-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="insects" class="data-section">
+			<h2>🦋 Insect Discoveries</h2>
+			<div id="insect-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="heritage" class="data-section">
+			<h2>🏺 Archaeological Sites</h2>
+			<div id="archaeo-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="parks" class="data-section">
+			<h2>🏞️ National Parks & Trails</h2>
+			<div id="parks-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="fossils" class="data-section">
+			<h2>🦴 Fossil Discoveries</h2>
+			<div id="fossil-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="earthquakes" class="data-section">
+			<h2>🌋 Nearby Earthquakes</h2>
+			<div id="quake-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="weather" class="data-section">
+			<h2>🌦️ Weather & Forecast</h2>
+			<div id="weather-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="recent-searches">
+			<h2>🕒 Recent Searches</h2>
+			<div id="recent-searches-content">
+				<div id="your-recent-searches">
+					<h3>Your Recent</h3>
+					<div id="personal-searches" class="search-list">
+						<p class="no-searches">No recent searches yet</p>
+					</div>
+				</div>
+				<div id="community-recent-searches">
+					<h3>🌍 Explore Where Others Are Adventuring</h3>
+					<div id="community-searches" class="search-list">
+						<!-- Hotspot cards will be dynamically loaded here -->
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="map" class="data-section">
+			<h2 id="map-header">🗺️ Interactive Map</h2>
+			<div id="map-description" style="color: #e8e6e3; margin-bottom: 1rem; line-height: 1.5">
+				<p>🔍 Select your location to reveal nearby events and features on this interactive map.</p>
+			</div>
+			<div id="map-controls" style="margin-bottom: 1rem; text-align: center;">
+				<button id="zoom-back-btn" onclick="zoomBackToUserLocation()" style="
+					background: linear-gradient(135deg, #4CAF50, #45a049);
+					color: white;
+					border: none;
+					padding: 10px 20px;
+					border-radius: 6px;
+					font-size: 14px;
+					font-weight: 600;
+					cursor: pointer;
+					box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+					transition: all 0.2s ease;
+					display: none;
+				" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(76, 175, 80, 0.3)'">
+					🏠 Zoom Back to Your Location
+				</button>
+			</div>
+			<div id="leaflet-map">
+				<p style="color: white; text-align: center; padding-top: 130px">
+					🔍 Select your location to reveal nearby events and features on the map.
+				</p>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<div class="footer-content">
+			<div class="cloud cloud-1"></div>
+			<div class="cloud cloud-2"></div>
+			<div class="cloud cloud-3"></div>
+			<div class="cloud cloud-4"></div>
+			
+			<div class="footer-section">
+				<div class="section-icon">🌲</div>
+				<h2>About Nature Near Me</h2>
+				<p>
+					Explore the natural world around you with real-time data on earthquakes, bird sightings, archaeological sites, fossil discoveries, national parks, and weather. Our interactive map combines scientific databases to reveal the hidden stories beneath your feet and in the skies above.
+				</p>
+			</div>
+
+			<div class="footer-section">
+				<div class="section-icon">🔬</div>
+				<h3>Data Sources & Credits</h3>
+				<p>This application is powered by trusted scientific and government databases:</p>
+				<ul class="data-sources">
+					<li>
+						<strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener">USGS Earthquake Hazards Program</a></strong>
+						- Real-time earthquake monitoring
+					</li>
+					<li>
+						<strong><a href="https://ebird.org/" target="_blank" rel="noopener">eBird by Cornell Lab</a></strong>
+						- Community-driven bird observation data
+					</li>
+					<li>
+						<strong><a href="https://www.nps.gov/subjects/developer/" target="_blank" rel="noopener">National Park Service API</a></strong>
+						- Official parks and trails information
+					</li>
+					<li>
+						<strong><a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a></strong>
+						- Comprehensive fossil discovery records
+					</li>
+					<li>
+						<strong><a href="https://macrostrat.org/" target="_blank" rel="noopener">Macrostrat</a></strong>
+						- Geological formation and bedrock data
+					</li>
+					<li>
+						<strong><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> & <a href="https://nominatim.org/" target="_blank" rel="noopener">Nominatim</a></strong>
+						- Geographic data and location services
+					</li>
+					<li>
+						<strong><a href="https://www.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a></strong>
+						- Historical and archaeological site information
+					</li>
+					<li>
+						<strong><a href="https://wttr.in/" target="_blank" rel="noopener">wttr.in</a></strong>
+						- Weather forecasting service
+					</li>
+				</ul>
+			</div>
+
+			<div class="footer-section">
+				<div class="section-icon">✨</div>
+				<h3>Features</h3>
+				<ul class="features-list">
+					<li>🌋 Real-time earthquake monitoring within 200km</li>
+					<li>🐦 Recent bird sightings from citizen scientists</li>
+					<li>🏞️ National parks and trails within 600 miles</li>
+					<li>🦴 Fossil discoveries spanning millions of years</li>
+					<li>🏺 Archaeological and historical sites</li>
+					<li>🌦️ Current weather conditions and forecasts</li>
+					<li>🗺️ Interactive map with custom markers</li>
+					<li>🔍 Location-based autocomplete search</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="forest-scene-bottom">
+			<div class="tree tree-1"></div>
+			<div class="tree tree-2"></div>
+			<div class="tree tree-3"></div>
+			<div class="mountain mountain-1"></div>
+			<div class="mountain mountain-2"></div>
+			
+			<!-- Wildlife and ground elements -->
+			<!-- <div class="wildlife deer"></div>
+			<div class="wildlife rabbit"></div>
+			<div class="wildlife fox"></div> -->
+
+			<div class="ground-element rock-1"></div>
+			<div class="ground-element rock-2"></div>
+			<div class="ground-element mushroom-1"></div>
+			<div class="ground-element mushroom-2"></div>
+			<div class="ground-element flower-1"></div>
+			<div class="ground-element flower-2"></div>
+
+			<!-- Simplified footer without bugs for performance -->
+		</div>
+
+		<div class="footer-bottom">
+			<div class="footer-decoration-bottom">
+				<!-- Simplified for performance -->
+			</div>
+			<p>&copy; 2025 Earth, Uncovered by Curiosity. Built with open data for scientific exploration and education.</p>
+		</div>
+	</footer>
+
+	<script>
+		// Essential functions for location search and data loading
+		let userLocationLabel = "";
+		let currentLocationData = null; // Store full location data for emoji selection
+		
+		// Adventure hotspots pool
+		const adventureHotspots = [
+			{
+				name: "Yellowstone National Park, Wyoming",
+				emoji: "🦌",
+				title: "Yellowstone National Park, WY",
+				subtitle: "Geysers, wildlife & earthquake activity",
+				features: ["🌋 Geothermal", "🦴 Fossils", "🦅 Eagles"]
+			},
+			{
+				name: "Grand Canyon, Arizona",
+				emoji: "🏜️",
+				title: "Grand Canyon, AZ",
+				subtitle: "Ancient geology & condor sightings",
+				features: ["🏺 Archaeology", "🦴 Deep Time", "🦅 Condors"]
+			},
+			{
+				name: "Olympic National Park, Washington",
+				emoji: "🌲",
+				title: "Olympic National Park, WA",
+				subtitle: "Rainforests, coastlines & biodiversity",
+				features: ["🦋 Insects", "🐦 Seabirds", "🌧️ Weather"]
+			},
+			{
+				name: "Yosemite National Park, California",
+				emoji: "🏔️",
+				title: "Yosemite National Park, CA",
+				subtitle: "Granite cliffs & ancient sequoias",
+				features: ["🦌 Wildlife", "🦅 Raptors", "💎 Geology"]
+			},
+			{
+				name: "Great Smoky Mountains National Park, Tennessee",
+				emoji: "🌲",
+				title: "Great Smoky Mountains, TN",
+				subtitle: "Misty peaks & salamander diversity",
+				features: ["🦋 Biodiversity", "🏺 History", "🌿 Plants"]
+			},
+			{
+				name: "Glacier National Park, Montana",
+				emoji: "🏔️",
+				title: "Glacier National Park, MT",
+				subtitle: "Alpine lakes & mountain goats",
+				features: ["🐐 Goats", "❄️ Glaciers", "🦅 Eagles"]
+			},
+			{
+				name: "Arches National Park, Utah",
+				emoji: "🏜️",
+				title: "Arches National Park, UT",
+				subtitle: "Red rock formations & desert life",
+				features: ["🦎 Reptiles", "🏺 Petroglyphs", "🌵 Desert"]
+			},
+			{
+				name: "Everglades National Park, Florida",
+				emoji: "🐊",
+				title: "Everglades National Park, FL",
+				subtitle: "Wetlands & alligator habitat",
+				features: ["🐊 Gators", "🦩 Birds", "🦋 Insects"]
+			},
+			{
+				name: "Zion National Park, Utah",
+				emoji: "🏜️",
+				title: "Zion National Park, UT",
+				subtitle: "Towering canyons & desert streams",
+				features: ["🦎 Wildlife", "🏺 Culture", "💎 Sandstone"]
+			},
+			{
+				name: "Acadia National Park, Maine",
+				emoji: "🌲",
+				title: "Acadia National Park, ME",
+				subtitle: "Rugged coastline & puffin colonies",
+				features: ["🐦 Puffins", "🦞 Marine", "🌊 Coast"]
+			},
+			{
+				name: "Rocky Mountain National Park, Colorado",
+				emoji: "🏔️",
+				title: "Rocky Mountain National Park, CO",
+				subtitle: "Alpine tundra & elk herds",
+				features: ["🦌 Elk", "🦅 Raptors", "🌸 Alpine"]
+			},
+			{
+				name: "Death Valley National Park, California",
+				emoji: "🏜️",
+				title: "Death Valley National Park, CA",
+				subtitle: "Extreme heat & unique geology",
+				features: ["🦎 Extreme", "💎 Minerals", "🌵 Adapted"]
+			},
+			{
+				name: "Big Bend National Park, Texas",
+				emoji: "🏜️",
+				title: "Big Bend National Park, TX",
+				subtitle: "Rio Grande & Chihuahuan Desert",
+				features: ["🦎 Desert", "🦅 Raptors", "🏺 History"]
+			},
+			{
+				name: "Bryce Canyon National Park, Utah",
+				emoji: "🏜️",
+				title: "Bryce Canyon National Park, UT",
+				subtitle: "Hoodoos & high-altitude forest",
+				features: ["💎 Hoodoos", "🦌 Wildlife", "❄️ Alpine"]
+			},
+			{
+				name: "Joshua Tree National Park, California",
+				emoji: "🌵",
+				title: "Joshua Tree National Park, CA",
+				subtitle: "Mojave & Colorado desert meeting",
+				features: ["🌵 Joshua Trees", "🦎 Reptiles", "💎 Rocks"]
+			},
+			{
+				name: "Sequoia National Park, California",
+				emoji: "🌲",
+				title: "Sequoia National Park, CA",
+				subtitle: "Giant trees & Sierra Nevada peaks",
+				features: ["🌲 Giants", "🐻 Bears", "🏔️ Mountains"]
+			},
+			{
+				name: "Great Sand Dunes National Park, Colorado",
+				emoji: "🏜️",
+				title: "Great Sand Dunes, CO",
+				subtitle: "Tallest dunes & alpine lakes",
+				features: ["🏔️ Dunes", "💧 Streams", "🦋 Insects"]
+			},
+			{
+				name: "Crater Lake National Park, Oregon",
+				emoji: "🌋",
+				title: "Crater Lake National Park, OR",
+				subtitle: "Volcanic caldera & deep blue lake",
+				features: ["🌋 Volcanic", "💧 Pure Water", "❄️ Snow"]
+			},
+			{
+				name: "Mesa Verde National Park, Colorado",
+				emoji: "🏺",
+				title: "Mesa Verde National Park, CO",
+				subtitle: "Ancient Puebloan cliff dwellings",
+				features: ["🏺 Ancient", "🦎 Desert", "📿 Culture"]
+			}
+		];
+		
+		// Function to randomly select and display 3 hotspots
+		function loadRandomHotspots() {
+			const shuffled = [...adventureHotspots].sort(() => 0.5 - Math.random());
+			const selected = shuffled.slice(0, 3);
+			
+			const hotspotContainer = document.getElementById('community-searches');
+			if (!hotspotContainer) return;
+			
+			hotspotContainer.innerHTML = selected.map(hotspot => `
+				<div class="hotspot-card" onclick="searchLocation('${hotspot.name}')">
+					<div class="hotspot-header">
+						<span class="hotspot-emoji">${hotspot.emoji}</span>
+						<div>
+							<h4>${hotspot.title}</h4>
+							<p class="hotspot-subtitle">${hotspot.subtitle}</p>
+						</div>
+					</div>
+					<div class="hotspot-features">
+						${hotspot.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+					</div>
+				</div>
+			`).join('');
+		}
+		
+		function scrollToLocationInput() {
+			const inputField = document.getElementById("location-input-field");
+			if (inputField) {
+				inputField.scrollIntoView({ behavior: "smooth", block: "center" });
+				setTimeout(() => inputField.focus(), 300);
+			}
+		}
+		window.scrollToLocationInput = scrollToLocationInput;
+		window.useLocationInput = useLocationInput;
+		window.useGeolocation = useGeolocation;
+		window.selectRecentSearch = selectRecentSearch;
+		window.clearRecentSearches = clearRecentSearches;
+		window.searchLocation = searchLocation;
+		
+		function useLocationInput() {
+			const input = document.getElementById("location-input-field").value.trim();
+			if (!input) return alert("Please enter a location!");
+			
+			if (/^\d{5}$/.test(input)) {
+				useZipCode(input);
+			} else {
+				searchLocation(input);
+			}
+		}
+		
+		function useZipCode(zip) {
+			fetch(`https://api.zippopotam.us/us/${zip}`)
+				.then(r => r.json())
+				.then(data => {
+					const lat = parseFloat(data.places[0].latitude);
+					const lng = parseFloat(data.places[0].longitude);
+					const city = data.places[0]["place name"];
+					const state = data.places[0]["state abbreviation"];
+					userLocationLabel = `${city}, ${state} ${zip}`;
+					
+					// Create location data for emoji selection
+					currentLocationData = {
+						name: city,
+						address: { 
+							city: city,
+							state: state
+						},
+						display_name: `${city}, ${state}, United States`
+					};
+					
+					loadAllData(lat, lng);
+				})
+				.catch(() => alert("Could not find location for that ZIP code."));
+		}
+		
+		function searchLocation(query) {
+			const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=1&countrycodes=us`;
+			fetch(url, { headers: { "User-Agent": "Nature Events App" } })
+				.then(r => r.json())
+				.then(data => {
+					if (data && data.length > 0) {
+						const result = data[0];
+						console.log("🗺️ Nominatim API result:", result); // Debug log
+						const lat = parseFloat(result.lat);
+						const lng = parseFloat(result.lon);
+						
+						// Store full location data for emoji selection
+						currentLocationData = result;
+						userLocationLabel = formatLocationName(result);
+						
+						loadAllData(lat, lng);
+					} else {
+						alert("Could not find that location. Please try a different search.");
+					}
+				})
+				.catch(e => alert(`Failed to search for location: ${e.message}`));
+		}
+		
+		function getLocationEmoji(addressOrResult) {
+			const address = addressOrResult.address || addressOrResult;
+			const name = addressOrResult.name || "";
+			const displayName = addressOrResult.display_name || "";
+			
+			// Specific location overrides
+			if (name.toLowerCase().includes('yellowstone')) return '🦌';
+			if (name.toLowerCase().includes('grand canyon')) return '🏜️';
+			if (name.toLowerCase().includes('olympic')) return '🌲';
+			
+			// Category-based emojis
+			if (address.national_park) {
+				if (name.toLowerCase().includes('forest') || name.toLowerCase().includes('redwood') || name.toLowerCase().includes('sequoia')) return '🌲';
+				if (name.toLowerCase().includes('desert') || name.toLowerCase().includes('joshua') || name.toLowerCase().includes('death valley')) return '🏜️';
+				if (name.toLowerCase().includes('glacier') || name.toLowerCase().includes('rocky') || name.toLowerCase().includes('denali')) return '🏔️';
+				if (name.toLowerCase().includes('everglades') || name.toLowerCase().includes('biscayne')) return '🐊';
+				if (name.toLowerCase().includes('hawaii') || name.toLowerCase().includes('volcano')) return '🌋';
+				return '🏞️'; // Default for national parks
+			}
+			
+			if (address.protected_area) return '🌲';
+			if (address.valley) return '🏜️';
+			
+			// Natural features
+			if (address.natural) {
+				if (address.natural.includes('forest') || address.natural.includes('woods')) return '🌲';
+				if (address.natural.includes('desert') || address.natural.includes('canyon')) return '🏜️';
+				if (address.natural.includes('mountain') || address.natural.includes('peak')) return '🏔️';
+				if (address.natural.includes('lake') || address.natural.includes('river')) return '🏞️';
+				if (address.natural.includes('beach') || address.natural.includes('coast')) return '🏖️';
+				return '🌍'; // Default for natural features
+			}
+			
+			// Tourism/leisure
+			if (address.tourism || address.leisure) return '🏛️';
+			
+			// Cities by region/climate
+			const state = address.state || "";
+			if (['Arizona', 'Nevada', 'New Mexico', 'Utah'].includes(state)) return '🏜️';
+			if (['Alaska', 'Montana', 'Colorado', 'Wyoming'].includes(state)) return '🏔️';
+			if (['Oregon', 'Washington', 'Maine', 'Vermont'].includes(state)) return '🌲';
+			if (['Florida', 'Hawaii', 'California'].includes(state)) return '🌴';
+			
+			// Default fallback
+			return '🌍';
+		}
+
+		function formatLocationName(addressOrResult) {
+			// Handle the case where we might get the full result object instead of just address
+			const address = addressOrResult.address || addressOrResult;
+			const displayName = addressOrResult.display_name;
+			const name = addressOrResult.name;
+			const addresstype = addressOrResult.addresstype;
+			
+			console.log("🏷️ Formatting location name:", addressOrResult); // Debug log
+			
+			// For states (when searching "Colorado", "Wyoming", etc.)
+			if (addresstype === 'state' || (name && address.state && name === address.state)) {
+				return address.state || name;
+			}
+			
+			// For national parks (Yellowstone pattern)
+			if (address.national_park) {
+				const state = address.state;
+				return state ? `${address.national_park}, ${state}` : address.national_park;
+			}
+			
+			// For protected areas (Olympic pattern)  
+			if (address.protected_area) {
+				const state = address.state;
+				return state ? `${address.protected_area}, ${state}` : address.protected_area;
+			}
+			
+			// For valleys and natural features (Grand Canyon pattern)
+			if (address.valley) {
+				const state = address.state;
+				return state ? `${address.valley}, ${state}` : address.valley;
+			}
+			
+			// Use the main name field if available and it's a landmark
+			if (name && address.state && (name.toLowerCase().includes('park') || name.toLowerCase().includes('canyon') || name.toLowerCase().includes('monument'))) {
+				return `${name}, ${address.state}`;
+			}
+			
+			// For other tourism, leisure, amenity places
+			if (address.tourism || address.leisure || address.amenity || address.natural) {
+				const placeName = address.tourism || address.leisure || address.amenity || address.natural;
+				const state = address.state;
+				return state ? `${placeName}, ${state}` : placeName;
+			}
+			
+			// For regular cities/towns
+			const city = address.city || address.town || address.village || address.hamlet;
+			const state = address.state;
+			if (city && state) {
+				return `${city}, ${state}`;
+			}
+			
+			// Fallback: Use display_name parsing
+			if (displayName) {
+				const parts = displayName.split(",").map(p => p.trim());
+				// For landmarks, use the first meaningful part
+				if (parts[0] && address.state) {
+					return `${parts[0]}, ${address.state}`;
+				}
+				// Try to get the first two meaningful parts
+				if (parts.length >= 2) {
+					return `${parts[0]}, ${parts[1]}`;
+				}
+				return parts[0] || "Unknown location";
+			}
+			
+			return "Unknown location";
+		}
+		
+		function loadAllData(lat, lng) {
+			// Store user's location for zoom back functionality
+			userLocation.lat = lat;
+			userLocation.lng = lng;
+			userLocation.name = userLocationLabel;
+			console.log("📍 Stored user location:", userLocation);
+			
+			// Show the zoom back button
+			const zoomBackBtn = document.getElementById('zoom-back-btn');
+			if (zoomBackBtn) {
+				zoomBackBtn.style.display = 'inline-block';
+			}
+			
+			// Create and show welcome section at the top of main
+			const main = document.querySelector('main');
+			let welcomeSection = document.getElementById('welcome-section');
+			
+			// Get dynamic emoji based on location type
+			const locationEmoji = currentLocationData ? getLocationEmoji(currentLocationData) : '🌍';
+			
+			if (!welcomeSection) {
+				// Create welcome section dynamically
+				welcomeSection = document.createElement('section');
+				welcomeSection.id = 'welcome-section';
+				welcomeSection.innerHTML = `
+					<div class="hero-section">
+						<h1 id="welcome-title">${locationEmoji} Welcome to ${userLocationLabel} ${locationEmoji}</h1>
+						<p id="welcome-description">Discover the natural wonders, wildlife, and weather around your area</p>
+						<div class="location-badge">
+							<span class="location-icon">📍</span>
+							<span id="location-display" class="location-text">${userLocationLabel}</span>
+							<span class="location-icon">📍</span>
+						</div>
+					</div>
+				`;
+				
+				// Insert AFTER the location input section
+				const locationInputSection = document.getElementById('location-input');
+				main.insertBefore(welcomeSection, locationInputSection.nextSibling);
+			} else {
+				// Update existing welcome section
+				document.getElementById('welcome-title').textContent = `${locationEmoji} Welcome to ${userLocationLabel} ${locationEmoji}`;
+				document.getElementById('location-display').textContent = userLocationLabel;
+				welcomeSection.style.display = 'block';
+			}
+			
+			// Show data sections and update input
+			document.querySelectorAll('.data-section').forEach(section => {
+				section.style.display = 'block';
+				section.classList.add('has-data');
+				console.log('Showing section:', section.id, section.classList);
+			});
+			
+			// Force map to show (debug)
+			const mapSection = document.getElementById('map');
+			if (mapSection) {
+				mapSection.style.display = 'block';
+				mapSection.classList.add('has-data');
+				console.log('Map section found and forced to show:', mapSection);
+			} else {
+				console.error('Map section not found!');
+			}
+			
+			const input = document.getElementById("location-input-field");
+			input.value = "";
+			input.placeholder = `Current: ${userLocationLabel} (click to search new location)`;
+			
+			// Save to recent searches if we have city/state info
+			const parts = userLocationLabel.split(', ');
+			if (parts.length >= 2) {
+				addToRecentSearches(parts[0], parts[1]);
+			}
+			
+			// Smooth scroll to welcome section after a brief delay
+			setTimeout(() => {
+				welcomeSection.scrollIntoView({ 
+					behavior: 'smooth', 
+					block: 'start' 
+				});
+			}, 300);
+			
+			// Load map FIRST so markers can be added
+			loadMap(lat, lng);
+			
+			// Load all data types
+			loadWeather(lat, lng);
+			loadBirds(lat, lng);
+			loadInsects(lat, lng);
+			loadArchaeology(lat, lng);
+			loadParks(lat, lng);
+			loadFossils(lat, lng);
+			loadEarthquakes(lat, lng);
+		}
+		
+		function loadWeather(lat, lng) {
+			fetch(`https://wttr.in/${lat},${lng}?format=j1`)
+				.then(r => r.json())
+				.then(data => {
+					const current = data.current_condition[0];
+					const html = `
+						<p><strong>${current.weatherDesc[0].value}</strong> in <em>${userLocationLabel}</em></p>
+						<p>🌡️ Temp: ${current.temp_F}°F (Feels like ${current.FeelsLikeF}°F)</p>
+						<p>💨 Wind: ${current.windspeedMiles} mph</p>
+					`;
+					const weatherContainer = document.getElementById("weather-data");
+					weatherContainer.innerHTML = html;
+					weatherContainer.removeAttribute("onclick");
+					
+					// Update map features
+					mapFeatures.weather.found = true;
+					updateMapDescription();
+				})
+				.catch(() => {
+					document.getElementById("weather-data").textContent = "Failed to load weather.";
+				});
+		}
+		
+		function loadBirds(lat, lng) {
+			fetch(`https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}`, {
+				headers: { "X-eBirdApiToken": "j0j0d58b330k" }
+			})
+				.then(r => r.json())
+				.then(data => {
+					if (!data.length) {
+						document.getElementById("species-data").textContent = "No recent sightings nearby.";
+						return;
+					}
+					const html = `
+						<p>📍 Found ${data.slice(0, 6).length} birds nearby from the eBird community database</p>
+						<ul class="data-list">
+							${data.slice(0, 6).map(bird => `
+								<li class="bird-item clickable-item" onclick="return zoomToLocation(${bird.lat}, ${bird.lng}, '${bird.comName}', event)">
+									<div>
+										<strong>${bird.comName}</strong><br/>
+										<small style="color: #ccc;">Spotted: ${new Date(bird.obsDt).toLocaleDateString()}</small>
+									</div>
+								</li>
+							`).join('')}
+						</ul>
+					`;
+					const speciesContainer = document.getElementById("species-data");
+					speciesContainer.innerHTML = html;
+					speciesContainer.removeAttribute("onclick"); // Remove the scroll-to-input click handler
+					
+					// Update map features and add markers
+					mapFeatures.birds.found = true;
+					mapFeatures.birds.count = data.length;
+					updateMapDescription();
+					
+					// Add bird markers to map
+					data.slice(0, 10).forEach(bird => {
+						if (bird.lat && bird.lng) {
+							addMapMarker(
+								bird.lat, bird.lng,
+								'🐦',
+								bird.comName,
+								`Observed: ${new Date(bird.obsDt).toLocaleDateString()}`,
+								bird.locName,
+								'bird'
+							);
+						}
+					});
+				})
+				.catch(() => {
+					document.getElementById("species-data").textContent = "Failed to load species data.";
+				});
+		}
+		
+		function loadInsects(lat, lng) {
+			fetch(`https://api.inaturalist.org/v1/observations?lat=${lat}&lng=${lng}&radius=50&taxon_id=47158&photos=true&quality_grade=research&per_page=10&order=desc&order_by=observed_on`)
+				.then(r => r.json())
+				.then(data => {
+					const insects = data.results || [];
+					if (!insects.length) {
+						document.getElementById("insect-data").textContent = "No recent insect observations nearby.";
+						return;
+					}
+					const html = `
+						<p>📍 Found ${insects.length} insect observations nearby from the iNaturalist community</p>
+						<ul class="data-list">
+							${insects.slice(0, 6).map(insect => {
+								const commonName = insect.taxon.preferred_common_name || insect.taxon.name;
+								const location = insect.place_guess || 'Unknown location';
+								const date = new Date(insect.observed_on).toLocaleDateString();
+								const lat = insect.location ? insect.location.split(',')[0] : null;
+								const lng = insect.location ? insect.location.split(',')[1] : null;
+								return `
+									<li class="data-list-item clickable-item" ${lat && lng ? `onclick="return zoomToLocation(${lat}, ${lng}, '${commonName}', event)"` : ''}>
+										<div>
+											<strong>🐛 ${commonName}</strong><br/>
+											${location}<br/>
+											<small style="color: #ccc;">Observed: ${date}</small>
+										</div>
+									</li>
+								`;
+							}).join('')}
+						</ul>
+					`;
+					const insectContainer = document.getElementById("insect-data");
+					insectContainer.innerHTML = html;
+					insectContainer.removeAttribute("onclick");
+					
+					// Update map features and add markers
+					mapFeatures.insects.found = true;
+					mapFeatures.insects.count = insects.length;
+					updateMapDescription();
+					
+					// Add insect markers to map
+					insects.slice(0, 8).forEach(insect => {
+						if (insect.location) {
+							addMapMarker(
+								insect.location.split(',')[0],
+								insect.location.split(',')[1],
+								'🦋',
+								insect.taxon.preferred_common_name || insect.taxon.name,
+								`Observed: ${new Date(insect.observed_on).toLocaleDateString()}`,
+								insect.place_guess,
+								'insect'
+							);
+						}
+					});
+				})
+				.catch(() => {
+					document.getElementById("insect-data").textContent = "Failed to load insect data.";
+				});
+		}
+		
+		function loadParks(lat, lng) {
+			console.log("🏞️ Loading parks for:", lat, lng);
+			fetch("https://developer.nps.gov/api/v1/parks?limit=50&start=0&api_key=EJ8nSrh2bYkNAE28U0aBbiEAH9H7X94ek5Hilutb", {
+				method: 'GET',
+				headers: {
+					'Accept': 'application/json'
+				}
+			})
+				.then(response => {
+					console.log("🏞️ NPS API response status:", response.status, response.statusText);
+					if (!response.ok) {
+						throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log("🏞️ NPS API response data:", data);
+					const nearby = data.data
+						.filter(park => park.latitude && park.longitude)
+						.map(park => ({
+							...park,
+							distance: haversineDistance(lat, lng, parseFloat(park.latitude), parseFloat(park.longitude))
+						}))
+						.filter(park => park.distance <= 800) // Within 800km - much more reasonable!
+						.sort((a, b) => a.distance - b.distance)
+						.slice(0, 6); // Show up to 6 parks
+					
+					console.log("🏞️ Nearby parks found:", nearby.length, nearby);
+					
+					if (!nearby.length) {
+						const parksContainer = document.getElementById("parks-data");
+					parksContainer.innerHTML = "<p>No NPS parks found nearby.</p>";
+					parksContainer.removeAttribute("onclick");
+						return;
+					}
+					
+					const html = `
+						<p>📍 Found ${nearby.length} parks nearby from the National Park Service</p>
+						<ul class="data-list">
+							${nearby.map(park => `
+								<li class="park-item clickable-item" onclick="return zoomToLocation(${park.latitude}, ${park.longitude}, '${park.fullName}', event)">
+									<div>
+										<strong>${park.fullName}</strong><br/>
+										${park.description ? park.description.substring(0, 100) + "..." : "National Park Service location"}<br/>
+										<small style="color: #ccc;">${park.states} • ${park.designation || "National Park Service"} • Distance: ${Math.round(park.distance)}km</small>
+									</div>
+								</li>
+							`).join('')}
+						</ul>
+					`;
+					const parksContainer2 = document.getElementById("parks-data");
+					parksContainer2.innerHTML = html;
+					parksContainer2.removeAttribute("onclick");
+					
+					// Update map features and add markers
+					mapFeatures.parks.found = true;
+					mapFeatures.parks.count = nearby.length;
+					updateMapDescription();
+					
+					// Add park markers to map
+					console.log("🏞️ Map state:", geoMap ? "initialized" : "not initialized", activityLayerGroup ? "layer ready" : "layer not ready");
+					console.log("🏞️ Parks to add to map:", nearby.map(p => ({ name: p.fullName, lat: p.latitude, lng: p.longitude, distance: p.distance })));
+					nearby.forEach(park => {
+						if (park.latitude && park.longitude) {
+							console.log("🏞️ Adding park marker:", park.fullName, "at", park.latitude, park.longitude, "distance:", park.distance + "km");
+							const result = addMapMarker(
+								parseFloat(park.latitude),
+								parseFloat(park.longitude),
+								'🏞️',
+								park.fullName,
+								park.description ? park.description.slice(0, 100) + '...' : 'National Park Service location',
+								`${park.states} • ${park.designation || 'National Park Service'}`,
+								'park'
+							);
+							console.log("🏞️ Marker add result:", result);
+						} else {
+							console.log("🚫 Park missing coordinates:", park.fullName, park.latitude, park.longitude);
+						}
+					});
+				})
+				.catch(error => {
+					console.error("🏞️ NPS API failed:", error);
+					const parksErrorContainer = document.getElementById("parks-data");
+					parksErrorContainer.innerHTML = `<p>Failed to load park data: ${error.message}</p>`;
+					parksErrorContainer.removeAttribute("onclick");
+				});
+		}
+		
+
+		function loadEarthquakes(lat, lng) {
+			fetch(`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${lat}&longitude=${lng}&maxradiuskm=200&orderby=time&limit=3`)
+				.then(r => r.json())
+				.then(data => {
+					if (!data.features || !data.features.length) {
+						document.getElementById("quake-data").textContent = "No recent earthquakes nearby.";
+						return;
+					}
+					const html = `
+						<p>📍 Found ${data.features.length} earthquakes nearby from USGS monitoring</p>
+						<ul class="data-list">
+							${data.features.map(quake => {
+								const { mag, place, time } = quake.properties;
+								const [lng, lat] = quake.geometry.coordinates;
+								return `
+									<li class="earthquake-item clickable-item" onclick="return zoomToLocation(${lat}, ${lng}, 'M ${mag} Earthquake', event)">
+										<div>
+											<strong>M ${mag} Earthquake</strong><br/>
+											${place}<br/>
+											<small style="color: #ccc;">${new Date(time).toLocaleString()}</small>
+										</div>
+									</li>
+								`;
+							}).join('')}
+						</ul>
+					`;
+					const quakeContainer = document.getElementById("quake-data");
+					quakeContainer.innerHTML = html;
+					quakeContainer.removeAttribute("onclick");
+					
+					// Update map features and add markers
+					mapFeatures.earthquakes.found = true;
+					mapFeatures.earthquakes.count = data.features.length;
+					updateMapDescription();
+					
+					// Add earthquake markers to map
+					data.features.forEach(quake => {
+						const coords = quake.geometry.coordinates;
+						const props = quake.properties;
+						addMapMarker(
+							coords[1], coords[0], // lat, lng
+							'🌋',
+							`M${props.mag} Earthquake`,
+							props.place,
+							new Date(props.time).toLocaleDateString(),
+							'earthquake'
+						);
+					});
+				})
+				.catch(() => {
+					document.getElementById("quake-data").textContent = "Failed to load earthquake data.";
+				});
+		}
+		
+		function loadFossils(lat, lng) {
+			console.log("🦴 Loading fossils for:", lat, lng);
+			const fossilsEl = document.getElementById("fossil-data");
+			fossilsEl.innerHTML = `<p>🔍 Searching for fossil records...</p>`;
+			
+			// Use the Paleobiology Database API to get fossil occurrences near the location
+			// Using a bounding box approach since PBDB doesn't have direct lat/lng radius search
+			const latlng_buffer = 2.0; // degrees buffer around the point
+			const minLat = lat - latlng_buffer;
+			const maxLat = lat + latlng_buffer;
+			const minLng = lng - latlng_buffer;
+			const maxLng = lng + latlng_buffer;
+
+			const pbdbUrl = `https://paleobiodb.org/data1.2/occs/list.json?lngmin=${minLng}&lngmax=${maxLng}&latmin=${minLat}&latmax=${maxLat}&show=coords,loc,time,class&limit=50`;
+			
+			console.log("🦴 PBDB API URL:", pbdbUrl);
+			
+			fetch(pbdbUrl)
+				.then(response => {
+					console.log("🦴 PBDB API response status:", response.status, response.statusText);
+					if (!response.ok) {
+						throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log("🦴 PBDB API response data:", data);
+					if (!data.records || !data.records.length) {
+						fossilsEl.innerHTML = `<p>No fossil records found in the Paleobiology Database for this area.</p>`;
+						return;
+					}
+
+					// Process and filter fossils data
+					const fossilsData = data.records
+						.filter(fossil => fossil.lng && fossil.lat) // Must have coordinates
+						.map(fossil => ({
+							id: fossil.oid,
+							name: fossil.tna || fossil.gnl || 'Unknown Fossil',
+							classification: fossil.cla || fossil.odl || 'Unknown',
+							age: fossil.eag ? `${fossil.eag} Ma` : (fossil.egi ? fossil.egi : 'Unknown age'),
+							formation: fossil.sfm || fossil.fm || 'Unknown formation',
+							location: fossil.cc || fossil.stp || fossil.cnt || 'Unknown location',
+							lat: parseFloat(fossil.lat),
+							lng: parseFloat(fossil.lng),
+							distance: haversineDistance(lat, lng, parseFloat(fossil.lat), parseFloat(fossil.lng)),
+							period: fossil.oei || 'Unknown period'
+						}))
+						.filter(fossil => fossil.distance <= 200) // Within 200km
+						.sort((a, b) => a.distance - b.distance)
+						.slice(0, 4); // Show up to 4 fossils
+
+					console.log("🦴 Processed fossils data:", fossilsData);
+
+					if (!fossilsData.length) {
+						fossilsEl.innerHTML = `<p>No fossil records found within 200km of this location.</p>`;
+						return;
+					}
+
+					const html = `
+						<p>📍 Found ${fossilsData.length} fossil occurrences nearby from the Paleobiology Database</p>
+						<ul class="data-list">
+							${fossilsData.map(fossil => `
+								<li class="fossil-item clickable-item" onclick="return zoomToLocation(${fossil.lat}, ${fossil.lng}, '${fossil.name}', event)">
+									<div>
+										<strong>🦴 ${fossil.name}</strong><br/>
+										${fossil.classification} • ${fossil.age}<br/>
+										${fossil.formation} • ${fossil.location}<br/>
+										<small style="color: #ccc;">Distance: ${Math.round(fossil.distance)}km</small>
+									</div>
+								</li>
+							`).join('')}
+						</ul>
+					`;
+					fossilsEl.innerHTML = html;
+					fossilsEl.removeAttribute("onclick");
+
+					// Update map features and add markers
+					mapFeatures.fossils = { found: true, count: fossilsData.length, emoji: "🦴" };
+					updateMapDescription();
+
+					// Add fossil markers to map
+					fossilsData.forEach(fossil => {
+						addMapMarker(
+							fossil.lat, fossil.lng,
+							'🦴',
+							fossil.name,
+							`${fossil.classification} • ${fossil.age}`,
+							`${fossil.formation} • Distance: ${Math.round(fossil.distance)}km`,
+							'fossil'
+						);
+					});
+				})
+				.catch(error => {
+					console.error("🦴 PBDB API failed:", error);
+					fossilsEl.innerHTML = `<p>Failed to load fossil data: ${error.message}</p>`;
+				});
+		}
+		
+		function loadArchaeology(lat, lng) {
+			const archEl = document.getElementById("archaeo-data");
+			archEl.innerHTML = `<p>🔍 Searching for historical sites...</p>`;
+			
+			// First try Wikipedia/Wikimedia API for nearby historical sites
+			const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/nearby?lat=${lat}&lng=${lng}&radius=50000&limit=20`;
+			
+			fetch(wikiUrl)
+				.then(r => r.json())
+				.then(data => {
+					// Filter for likely archaeological/historical sites
+					const historicalSites = data.pages
+						?.filter(page => {
+							const title = page.title.toLowerCase();
+							return title.includes("archaeological") || 
+								   title.includes("historic") || 
+								   title.includes("monument") || 
+								   title.includes("ruins") || 
+								   title.includes("fort") || 
+								   title.includes("castle") || 
+								   title.includes("mission") ||
+								   title.includes("cemetery") ||
+								   title.includes("battlefield");
+						})
+						.map(page => ({
+							name: page.title,
+							lat: page.coordinates?.lat || lat,
+							lng: page.coordinates?.lon || lng,
+							description: page.extract || "Historical site",
+							type: "historic"
+						})) || [];
+					
+					if (historicalSites.length > 0) {
+						displayArchaeologicalSites(historicalSites, "wikipedia");
+					} else {
+						// Fallback to OpenStreetMap for historical features
+						loadArchaeologyFromOSM(lat, lng);
+					}
+				})
+				.catch(() => {
+					loadArchaeologyFromOSM(lat, lng);
+				});
+		}
+		
+		function loadArchaeologyFromOSM(lat, lng) {
+			// OpenStreetMap Overpass API query for historical sites
+			const query = `
+				[out:json][timeout:25];
+				(
+					node["historic"](around:50000,${lat},${lng});
+					way["historic"](around:50000,${lat},${lng});
+				);
+				out geom;
+			`;
+			
+			fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`)
+				.then(r => r.json())
+				.then(data => {
+					const sites = data.elements
+						?.map(element => ({
+							name: element.tags?.name || element.tags?.historic || "Historic Site",
+							lat: element.lat || (element.center?.lat),
+							lng: element.lon || (element.center?.lon),
+							description: getHistoricDescription(element.tags),
+							type: element.tags?.historic || element.tags?.tourism || "historic"
+						}))
+						.filter(site => site.lat && site.lng) || [];
+					
+					if (sites.length > 0) {
+						displayArchaeologicalSites(sites, "osm");
+					} else {
+						// Final fallback to static dataset
+						loadArchaeologyFallback(lat, lng);
+					}
+				})
+				.catch(() => {
+					loadArchaeologyFallback(lat, lng);
+				});
+		}
+		
+		function getHistoricDescription(tags) {
+			if (!tags) return "Historical site";
+			
+			const historic = tags.historic;
+			const descriptions = {
+				archaeological_site: "Archaeological excavation site",
+				castle: "Historic castle or fortress", 
+				church: "Historic church or religious building",
+				monument: "Historical monument",
+				ruins: "Ancient ruins",
+				cemetery: "Historic cemetery",
+				battlefield: "Historical battlefield",
+				fort: "Military fortification",
+				building: "Historic building"
+			};
+			
+			return descriptions[historic] || tags.description || `Historic ${historic || "site"}`;
+		}
+		
+		function loadArchaeologyFallback(lat, lng) {
+			// Static dataset of major archaeological sites
+			const sites = [
+				// Southwest USA
+				{name: "Chaco Canyon", lat: 36.0607, lng: -107.9609, description: "Major ancestral Puebloan cultural center (900-1150 CE)", type: "archaeological_site"},
+				{name: "Mesa Verde", lat: 37.1853, lng: -108.4618, description: "Cliff dwellings of ancestral Puebloans (600-1300 CE)", type: "archaeological_site"},
+				{name: "Canyon de Chelly", lat: 36.1531, lng: -109.3368, description: "Ancient Puebloan ruins and rock art", type: "archaeological_site"},
+				{name: "Bandelier", lat: 35.778, lng: -106.2708, description: "Ancestral Puebloan dwellings and petroglyphs", type: "archaeological_site"},
+				
+				// Midwest USA  
+				{name: "Cahokia Mounds", lat: 38.6551, lng: -90.0634, description: "Mississippian culture ceremonial center (1050-1200 CE)", type: "archaeological_site"},
+				{name: "Serpent Mound", lat: 39.0203, lng: -83.4309, description: "Ancient serpent-shaped earthwork (1000 BCE)", type: "archaeological_site"},
+				
+				// Southeast USA
+				{name: "Moundville", lat: 32.9976, lng: -87.6256, description: "Mississippian period mound complex", type: "archaeological_site"},
+				
+				// Northeast USA
+				{name: "Colonial Williamsburg", lat: 37.2707, lng: -76.7075, description: "Restored 18th-century colonial capital", type: "historic"},
+				
+				// West Coast
+				{name: "Mission San Juan Capistrano", lat: 33.5017, lng: -117.6628, description: "Historic Spanish mission (1776)", type: "mission"}
+			];
+			
+			// Calculate distances and find nearby sites
+			const nearbySites = sites
+				.map(site => ({
+					...site,
+					distance: haversineDistance(lat, lng, site.lat, site.lng)
+				}))
+				.filter(site => site.distance <= 300)
+				.sort((a, b) => a.distance - b.distance);
+			
+			if (nearbySites.length === 0) {
+				const archaeoContainer = document.getElementById("archaeo-data");
+				archaeoContainer.innerHTML = `
+					<p>🧭 No documented archaeological sites found within 300km.</p>
+					<p>This region may have undocumented sites or require specialized databases.</p>
+				`;
+				archaeoContainer.removeAttribute("onclick");
+			} else {
+				displayArchaeologicalSites(nearbySites, "static");
+			}
+		}
+		
+		function displayArchaeologicalSites(sites, source) {
+			// Update map features and add markers
+			mapFeatures.archaeology.found = true;
+			mapFeatures.archaeology.count = sites.length;
+			updateMapDescription();
+			
+			// Add archaeology markers to map
+			sites.slice(0, 8).forEach(site => {
+				addMapMarker(
+					site.lat, site.lng,
+					'🏺',
+					site.name,
+					site.description,
+					`Distance: ${site.distance ? Math.round(site.distance) + 'km' : 'Unknown'}`,
+					'archaeology'
+				);
+			});
+			
+			const sourceLabel = source === "wikipedia" 
+				? "from Wikipedia's historical database"
+				: source === "osm" 
+				? "from OpenStreetMap archives"
+				: "from historical archives";
+			
+			const html = `
+				<p>📍 Found ${sites.length} historical sites nearby ${sourceLabel}</p>
+				<ul class="data-list">
+					${sites.slice(0, 6).map(site => `
+													<li class="archaeology-item clickable-item" ${site.lat && site.lng ? `onclick="return zoomToLocation(${site.lat}, ${site.lng}, '${site.name}', event)"` : ''}>
+							<div>
+								<strong>${site.name}</strong><br/>
+								${site.description}<br/>
+								${site.distance ? `<small style="color: #ccc;">Distance: ${Math.round(site.distance)}km</small>` : ''}
+							</div>
+						</li>
+					`).join('')}
+				</ul>
+			`;
+			
+			const archaeoDataContainer = document.getElementById("archaeo-data");
+			archaeoDataContainer.innerHTML = html;
+			archaeoDataContainer.removeAttribute("onclick");
+		}
+		
+		// Map features tracking
+		let mapFeatures = {
+			earthquakes: { found: false, count: 0, emoji: "🌋" },
+			birds: { found: false, count: 0, emoji: "🐦" },
+			insects: { found: false, count: 0, emoji: "🦋" },
+			archaeology: { found: false, count: 0, emoji: "🏺" },
+			parks: { found: false, count: 0, emoji: "🏞️" },
+			weather: { found: false, emoji: "🌦️" },
+		};
+		
+		// Global map variable
+		let geoMap = null;
+		
+		// Store user's original location for zoom back functionality
+		let userLocation = { lat: null, lng: null, name: null };
+		
+		// Function to zoom to a specific location on the map
+		function zoomToLocation(lat, lng, title = '', event) {
+			console.log("🎯 zoomToLocation called:", { lat, lng, title });
+			
+			// Stop any other event handlers from firing
+			if (event) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			
+			if (!geoMap) {
+				console.log("❌ Map not loaded yet");
+				return false;
+			}
+			
+			// Ensure map section is visible and scroll to it
+			const mapSection = document.getElementById('map');
+			console.log("🗺️ Map section found:", mapSection);
+			
+			if (mapSection) {
+				// Make sure it's visible
+				mapSection.style.display = 'block';
+				console.log("📍 Scrolling to map section...");
+				mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			} else {
+				console.log("❌ Map section not found!");
+			}
+			
+			// Wait for scroll, then zoom
+			setTimeout(() => {
+				geoMap.setView([lat, lng], 14, {
+					animate: true,
+					duration: 1.5
+				});
+				
+				// Show a brief notification
+				if (title) {
+					const notification = document.createElement('div');
+					notification.style.cssText = `
+						position: fixed;
+						top: 20px;
+						right: 20px;
+						background: rgba(0, 0, 0, 0.8);
+						color: white;
+						padding: 10px 20px;
+						border-radius: 6px;
+						z-index: 10000;
+						font-size: 14px;
+						box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+					`;
+					notification.textContent = `📍 Zooming to: ${title}`;
+					document.body.appendChild(notification);
+					
+					setTimeout(() => {
+						if (notification && notification.parentNode) {
+							notification.parentNode.removeChild(notification);
+						}
+					}, 3000);
+				}
+			}, 500);
+			
+			return false; // Prevent any default behavior
+		}
+		
+		// Make zoomToLocation globally accessible
+		window.zoomToLocation = zoomToLocation;
+		
+		// Function to zoom back to user's original location
+		function zoomBackToUserLocation() {
+			console.log("🏠 Zooming back to user location:", userLocation);
+			
+			if (!geoMap) {
+				console.log("❌ Map not loaded yet");
+				return;
+			}
+			
+			if (!userLocation.lat || !userLocation.lng) {
+				console.log("❌ No user location stored");
+				return;
+			}
+			
+			// Zoom back to user's location
+			geoMap.setView([userLocation.lat, userLocation.lng], 12, {
+				animate: true,
+				duration: 1.5
+			});
+			
+			// Show notification
+			const notification = document.createElement('div');
+			notification.style.cssText = `
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				background: rgba(76, 175, 80, 0.9);
+				color: white;
+				padding: 10px 20px;
+				border-radius: 6px;
+				z-index: 10000;
+				font-size: 14px;
+				font-weight: 600;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+			`;
+			notification.textContent = `🏠 Back to: ${userLocation.name || 'Your Location'}`;
+			document.body.appendChild(notification);
+			
+			setTimeout(() => {
+				if (notification && notification.parentNode) {
+					notification.parentNode.removeChild(notification);
+				}
+			}, 3000);
+		}
+		
+		// Make zoomBackToUserLocation globally accessible
+		window.zoomBackToUserLocation = zoomBackToUserLocation;
+		
+		function updateMapDescription() {
+			const descDiv = document.getElementById("map-description");
+			if (!descDiv) return;
+			
+			const foundFeatures = Object.entries(mapFeatures)
+				.filter(([key, data]) => data.found)
+				.map(([key, data]) => 
+					data.count > 0 ? `${data.emoji} ${data.count} ${key}` : `${data.emoji} ${key}`
+				);
+			
+			if (foundFeatures.length > 0) {
+				descDiv.innerHTML = `
+					<p style="color: #4CAF50; font-weight: 600; margin-bottom: 0.5rem;">📍 Found nearby:</p>
+					<p style="color: #e8e6e3; line-height: 1.5;">${foundFeatures.join(' • ')}</p>
+				`;
+			}
+		}
+		
+		// Global map variables
+		let activityLayerGroup = null;
+		
+		// Haversine distance function for calculating distances between coordinates
+		function haversineDistance(lat1, lon1, lat2, lon2) {
+			const R = 6371; // Earth radius in kilometers
+			const dLat = (lat2 - lat1) * Math.PI / 180;
+			const dLon = (lon2 - lon1) * Math.PI / 180;
+			const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+				Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+				Math.sin(dLon/2) * Math.sin(dLon/2);
+			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+			return R * c; // Distance in kilometers
+		}
+		
+		function loadMap(lat, lng) {
+			const mapContainer = document.getElementById("leaflet-map");
+			if (!mapContainer) return;
+			
+			// Update map header with location
+			const mapHeader = document.getElementById("map-header");
+			if (mapHeader && userLocationLabel) {
+				mapHeader.textContent = `🗺️ Interactive Map - ${userLocationLabel}`;
+			}
+			
+			// Clear existing map
+			mapContainer.innerHTML = "";
+			if (geoMap) {
+				geoMap.remove();
+				geoMap = null;
+			}
+			
+			// Create Leaflet map
+			geoMap = L.map("leaflet-map", {
+				scrollWheelZoom: false,
+			}).setView([lat, lng], 10);
+			
+			// Add OpenStreetMap tiles
+			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '© OpenStreetMap contributors'
+			}).addTo(geoMap);
+			
+			// Initialize layer group for activity markers
+			activityLayerGroup = L.layerGroup().addTo(geoMap);
+			
+			// Add user location marker with special styling
+			const userIcon = L.divIcon({
+				html: '📍',
+				className: 'custom-emoji-icon emoji-user',
+				iconSize: [40, 40],
+				iconAnchor: [20, 20]
+			});
+			
+			const userMarker = L.marker([lat, lng], { icon: userIcon })
+				.addTo(geoMap)
+				.bindPopup(`<div style="text-align: center; min-width: 200px;">
+					<div style="font-size: 18px; margin-bottom: 8px;">📍 <strong>${userLocationLabel}</strong></div>
+					<div style="color: #444;">Your selected location</div>
+				</div>`, {
+					maxWidth: 250,
+					className: 'custom-popup'
+				});
+			
+			// Add hover tooltip for user marker
+			userMarker.on('mouseover', (e) => {
+				showTooltip(e, '📍', userLocationLabel, 'Your selected location', null);
+			});
+			
+			userMarker.on('mouseout', () => {
+				hideTooltip();
+			});
+			
+			userMarker.on('mousemove', (e) => {
+				if (tooltipEl && tooltipEl.classList.contains('show')) {
+					const rect = geoMap.getContainer().getBoundingClientRect();
+					const x = e.containerPoint.x + rect.left;
+					const y = e.containerPoint.y + rect.top;
+					
+					tooltipEl.style.left = (x + 15) + 'px';
+					tooltipEl.style.top = (y - 10) + 'px';
+				}
+			});
+			
+			// Force map to resize and fill container properly
+			setTimeout(() => {
+				if (geoMap) {
+					geoMap.invalidateSize();
+					console.log("🗺️ Map size invalidated to fix layout");
+				}
+			}, 100);
+			
+			// Also invalidate size when container becomes visible
+			setTimeout(() => {
+				if (geoMap) {
+					geoMap.invalidateSize();
+					console.log("🗺️ Map size invalidated again for safety");
+				}
+			}, 500);
+		}
+		
+		// Create tooltip element once
+		let tooltipEl = null;
+		
+		function createTooltip() {
+			if (!tooltipEl) {
+				tooltipEl = document.createElement('div');
+				tooltipEl.className = 'marker-tooltip';
+				document.body.appendChild(tooltipEl);
+			}
+			return tooltipEl;
+		}
+		
+		function showTooltip(e, emoji, title, description, data) {
+			const tooltip = createTooltip();
+			
+			let content = `<div class="tooltip-title">${emoji} ${title}</div>`;
+			if (description) content += `<div class="tooltip-description">${description}</div>`;
+			if (data) content += `<div class="tooltip-meta">${data}</div>`;
+			
+			tooltip.innerHTML = content;
+			
+			// Position tooltip near mouse
+			const rect = geoMap.getContainer().getBoundingClientRect();
+			const x = e.containerPoint.x + rect.left;
+			const y = e.containerPoint.y + rect.top;
+			
+			tooltip.style.left = (x + 15) + 'px';
+			tooltip.style.top = (y - 10) + 'px';
+			
+			// Show with animation
+			tooltip.classList.add('show');
+		}
+		
+		function hideTooltip() {
+			if (tooltipEl) {
+				tooltipEl.classList.remove('show');
+			}
+		}
+		
+		function addMapMarker(lat, lng, emoji, title, description, data = null, type = 'default') {
+			console.log("🎯 addMapMarker called:", { lat, lng, emoji, title, type, geoMap: !!geoMap, activityLayerGroup: !!activityLayerGroup });
+			if (!geoMap || !activityLayerGroup) {
+				console.log("🚫 Map not ready for marker:", title);
+				return;
+			}
+			
+			// Map emoji types to CSS classes for color-coding
+			const typeClasses = {
+				'bird': 'custom-emoji-icon emoji-bird',
+				'insect': 'custom-emoji-icon emoji-insect', 
+				'archaeology': 'custom-emoji-icon emoji-archaeology',
+				'park': 'custom-emoji-icon emoji-park',
+				'earthquake': 'custom-emoji-icon emoji-earthquake',
+				'fossil': 'custom-emoji-icon emoji-fossil',
+				'user': 'custom-emoji-icon emoji-user',
+				'default': 'custom-emoji-icon'
+			};
+			
+			const icon = L.divIcon({
+				html: emoji,
+				className: typeClasses[type] || typeClasses['default'],
+				iconSize: [35, 35],
+				iconAnchor: [17, 17]
+			});
+			
+			let popupContent = `<div style="text-align: center; min-width: 200px;">`;
+			popupContent += `<div style="font-size: 18px; margin-bottom: 8px;">${emoji} <strong>${title}</strong></div>`;
+			if (description) popupContent += `<div style="margin-bottom: 6px; color: #444;">${description}</div>`;
+			if (data) popupContent += `<div style="font-size: 12px; color: #888; font-style: italic;">${data}</div>`;
+			popupContent += `</div>`;
+			
+			const marker = L.marker([lat, lng], { icon: icon })
+				.addTo(activityLayerGroup)
+				.bindPopup(popupContent, {
+					maxWidth: 250,
+					className: 'custom-popup'
+				});
+			
+			// Add hover tooltip events
+			marker.on('mouseover', (e) => {
+				showTooltip(e, emoji, title, description, data);
+			});
+			
+			marker.on('mouseout', () => {
+				hideTooltip();
+			});
+			
+			marker.on('mousemove', (e) => {
+				if (tooltipEl && tooltipEl.classList.contains('show')) {
+					const rect = geoMap.getContainer().getBoundingClientRect();
+					const x = e.containerPoint.x + rect.left;
+					const y = e.containerPoint.y + rect.top;
+					
+					tooltipEl.style.left = (x + 15) + 'px';
+					tooltipEl.style.top = (y - 10) + 'px';
+				}
+			});
+			
+			return { success: true, marker: marker };
+		}
+		
+
+		
+		function useGeolocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(position => {
+					const { latitude: lat, longitude: lng } = position.coords;
+					userLocationLabel = "Your location";
+					
+					// Set a basic location data for emoji selection
+					currentLocationData = {
+						name: "Your location",
+						address: { state: "" }, // Will use default emoji
+						display_name: "Your current location"
+					};
+					
+					loadAllData(lat, lng);
+				}, () => {
+					alert("Failed to get location.");
+				});
+			} else {
+				alert("Geolocation not supported.");
+			}
+		}
+		
+		// Simple Recent Searches functionality
+		function addToRecentSearches(city, state, country = "United States") {
+			try {
+				const searches = JSON.parse(localStorage.getItem("recent-searches") || "[]");
+				const newSearch = {
+					city, state, country,
+					displayName: `${city}, ${state}`,
+					timestamp: new Date().toISOString()
+				};
+				
+				// Remove duplicates and add to front
+				const filtered = searches.filter(s => !(s.city === city && s.state === state));
+				filtered.unshift(newSearch);
+				
+				// Keep only last 5 searches
+				const limited = filtered.slice(0, 5);
+				localStorage.setItem("recent-searches", JSON.stringify(limited));
+				
+				displayRecentSearches();
+			} catch (e) {
+				console.warn("Could not save recent search:", e);
+			}
+		}
+		
+		function displayRecentSearches() {
+			try {
+				const searches = JSON.parse(localStorage.getItem("recent-searches") || "[]");
+				const container = document.getElementById("personal-searches");
+				
+				console.log("🔍 Recent searches debug:", {
+					searches,
+					container,
+					searchCount: searches.length
+				});
+				
+				if (!container) {
+					console.error("❌ Container 'personal-searches' not found!");
+					return;
+				}
+				
+				if (!searches.length) {
+					container.innerHTML = '<p class="no-searches">No recent searches yet</p>';
+					return;
+				}
+				
+				const html = searches.map(search => `
+					<div class="search-item" onclick="selectRecentSearch('${search.city}', '${search.state}')">
+						<span class="search-location">${search.displayName}</span>
+						<span class="search-time">${getTimeAgo(search.timestamp)}</span>
+					</div>
+				`).join('');
+				
+				container.innerHTML = html + '<button class="clear-searches" onclick="clearRecentSearches()">Clear Recent</button>';
+				console.log("✅ Recent searches updated:", html);
+			} catch (e) {
+				console.error("❌ Could not display recent searches:", e);
+			}
+		}
+		
+		function selectRecentSearch(city, state) {
+			const input = document.getElementById("location-input-field");
+			input.value = `${city}, ${state}`;
+			searchLocation(`${city}, ${state}`);
+		}
+		
+		function clearRecentSearches() {
+			if (confirm("Clear all recent searches?")) {
+				localStorage.removeItem("recent-searches");
+				displayRecentSearches();
+			}
+		}
+		
+		function getTimeAgo(timestamp) {
+			const hours = (new Date() - new Date(timestamp)) / 3600000;
+			if (hours < 1) return "Just now";
+			if (hours < 24) return `${Math.floor(hours)}h ago`;
+			return `${Math.floor(hours / 24)}d ago`;
+		}
+		
+
+		
+		// Initialize
+		document.addEventListener("DOMContentLoaded", function () {
+			console.log("🌍 Page loaded with essential data loading");
+			
+			// Force gradient background
+			document.body.style.backgroundImage = "none";
+			document.body.style.setProperty('background-image', 'linear-gradient(180deg, #81b16c 0%, #87ceeb 100%)', 'important');
+			
+			// Load random hotspots
+			loadRandomHotspots();
+			
+			// Setup location input
+			const input = document.getElementById("location-input-field");
+			if (input) {
+				input.addEventListener("keydown", function(e) {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						useLocationInput();
+					}
+				});
+			}
+			
+			// Hide data sections initially
+			document.querySelectorAll('.data-section').forEach(section => {
+				section.style.display = 'none';
+			});
+			
+			// Load recent searches
+			console.log("🚀 Initializing recent searches...");
+			
+			// Add test data if empty (for debugging)
+			const existingSearches = localStorage.getItem("recent-searches");
+			if (!existingSearches || existingSearches === "[]") {
+				console.log("🧪 Adding test search data...");
+				addToRecentSearches("Santa Fe", "New Mexico");
+				addToRecentSearches("Denver", "Colorado");
+			}
+			
+			displayRecentSearches();
+		});
+	</script>
 </Layout>
