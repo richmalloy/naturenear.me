@@ -199,14 +199,7 @@ const {
 	}
 
 	body {
-		background: linear-gradient(180deg, 
-			#7ab05c 0%,    /* Fresh green at top */
-			#6ba549 20%,   /* Deeper forest green */
-			#5c9437 40%,   /* Rich forest green */
-			#6ba549 60%,   /* Back to forest green */
-			#7ab05c 80%,   /* Lighter green */
-			#8bb470 100%  /* Soft sage green at bottom */
-		);
+		background: #6ba549; /* Solid forest green - no gradient */
 		color: var(--stone-dark);
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 		font-size: var(--text-base);
@@ -330,13 +323,14 @@ const {
 		/* Removed border for cleaner look */
 	}
 
-	/* Data Sections - MUCH LIGHTER Background */
+	/* Data Sections - Slightly darker background for better title visibility */
 	section {
 		margin-bottom: var(--space-8);
 		padding: var(--space-6);
-		background: rgba(255, 255, 255, 0.2); /* WAY LIGHTER - almost transparent */
+		background: rgba(244, 240, 230, 0.4); /* Slightly darker with brownish/greenish tint */
 		border-radius: var(--radius-lg);
-		/* Removed border for cleaner look */
+		border-bottom: 2px solid rgba(139, 105, 20, 0.3); /* Subtle bottom border to separate sections */
+		/* Removed full border for cleaner look */
 		box-shadow: 0 1px 4px rgba(139, 105, 20, 0.05); /* Much lighter shadow */
 		transition: all 0.3s ease;
 	}
@@ -344,7 +338,8 @@ const {
 	section:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 6px 16px rgba(139, 105, 20, 0.2);
-		background: rgba(255, 255, 255, 0.8); /* Brighter on hover */
+		background: rgba(244, 240, 230, 0.6); /* Slightly darker on hover */
+		border-bottom-color: rgba(139, 105, 20, 0.4); /* Slightly darker border on hover */
 	}
 
 	section h2 {
@@ -901,8 +896,8 @@ const {
 		}
 
 		main {
-			max-width: 100% !important; /* Full width on mobile */
-			margin: var(--space-4) var(--space-2); /* Smaller side margins */
+			max-width: 90% !important; /* 90% width on mobile */
+			margin: var(--space-4) auto; /* Center with auto margins */
 			padding: var(--space-4); /* Reduced padding */
 			border-radius: var(--radius-md); /* Smaller border radius */
 		}
@@ -910,6 +905,7 @@ const {
 		section {
 			padding: var(--space-4); /* Reduced section padding */
 			margin-bottom: var(--space-6); /* Reduced section margins */
+			width: 100%; /* Full width within the 90% container */
 		}
 
 		section h2 {
@@ -922,7 +918,7 @@ const {
 
 		.input-container {
 			flex-direction: column;
-			max-width: 100%; /* Full width on mobile */
+			max-width: 100%; /* Full width within the 90% container */
 		}
 
 		#location-input {
@@ -934,13 +930,22 @@ const {
 			font-size: var(--text-base); /* Readable font size */
 		}
 
+		/* Fix all the wrapper margins that are making content narrow */
+		#your-recent-searches,
+		#community-recent-searches,
+		#personal-searches,
+		#community-searches {
+			padding: var(--space-3); /* Much less padding */
+			margin: var(--space-2) 0; /* Minimal margins */
+		}
+
 		.hotspot-card {
-			margin: var(--space-4) 0; /* Reduced margins */
-			padding: var(--space-6); /* Reduced padding */
+			margin: var(--space-3) 0; /* Much smaller margins */
+			padding: var(--space-4); /* Reduced padding */
 		}
 
 		.search-item {
-			margin: var(--space-3) 0; /* Reduced margins */
+			margin: var(--space-2) 0; /* Much smaller margins */
 			padding: var(--space-3) var(--space-4); /* Reduced padding */
 		}
 
