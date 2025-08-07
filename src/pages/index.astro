@@ -80,12 +80,49 @@ import Layout from '../layouts/Layout.astro';
 				<h2>🌋 Nearby Earthquakes</h2>
 				<div id="quake-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
 			</section>
-
-			<section id="weather" class="data-section">
-				<h2>🌦️ Weather & Forecast</h2>
-				<div id="weather-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
-			</section>
 		</div>
+
+		<section id="weather" class="data-section">
+			<h2>🌦️ Weather & Forecast</h2>
+			<div id="weather-data" class="location-prompt" onclick="scrollToLocationInput()">📍 Enter location above</div>
+		</section>
+
+		<section id="map" class="data-section">
+			<h2 id="map-header">🗺️ Interactive Map</h2>
+			<div id="map-description" style="color: #e8e6e3; margin-bottom: 1rem; line-height: 1.5">
+				<p>🔍 Select your location to reveal nearby events and features on this interactive map.</p>
+			</div>
+			<div id="leaflet-map">
+				<p style="color: white; text-align: center; padding-top: 130px">
+					🔍 Select your location to reveal nearby events and features on the map.
+				</p>
+			</div>
+		</section>
+
+		<section id="location-input-2">
+			<p>Enter your ZIP code, city & state, or use your location:</p>
+			<div class="input-container">
+				<input type="text" id="location-input-field-2" placeholder="e.g. 87501 or Santa Fe, NM" />
+				<button class="input-submit-btn" onclick="useLocationInput2()" title="Search">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
+				</button>
+				<div id="autocomplete-suggestions-2" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; border-top: none; border-radius: 0 0 4px 4px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none;"></div>
+			</div>
+			<div class="location-divider">
+				<span>or</span>
+			</div>
+			<button onclick="useGeolocation()">Use My Location</button>
+		</section>
+
+		<section class="second-location-input">
+			<h3>🌍 Learn More About Nature in Another Location!</h3>
+			<p>Explore fascinating natural wonders and wildlife in these amazing destinations:</p>
+			<div class="random-locations" id="random-locations">
+				<!-- Random locations will be loaded here -->
+			</div>
+		</section>
 
 		<section id="recent-searches">
 			<h2>🕒 Recent Searches</h2>
@@ -102,18 +139,6 @@ import Layout from '../layouts/Layout.astro';
 						<!-- Hotspot cards will be dynamically loaded here -->
 					</div>
 				</div>
-			</div>
-		</section>
-
-		<section id="map" class="data-section">
-			<h2 id="map-header">🗺️ Interactive Map</h2>
-			<div id="map-description" style="color: #e8e6e3; margin-bottom: 1rem; line-height: 1.5">
-				<p>🔍 Select your location to reveal nearby events and features on this interactive map.</p>
-			</div>
-			<div id="leaflet-map">
-				<p style="color: white; text-align: center; padding-top: 130px">
-					🔍 Select your location to reveal nearby events and features on the map.
-				</p>
 			</div>
 		</section>
 	</main>
@@ -323,6 +348,21 @@ import Layout from '../layouts/Layout.astro';
 			`).join('');
 		}
 		
+		// Function to load 3 random locations in the second location input section
+		function loadRandomLocations() {
+			const shuffled = [...adventureHotspots].sort(() => 0.5 - Math.random());
+			const selected = shuffled.slice(0, 3);
+			
+			const randomLocationsContainer = document.getElementById('random-locations');
+			if (!randomLocationsContainer) return;
+			
+			randomLocationsContainer.innerHTML = selected.map(location => `
+				<button class="random-location-btn" onclick="searchLocation('${location.name}')">
+					${location.emoji} ${location.title}
+				</button>
+			`).join('');
+		}
+		
 		function scrollToLocationInput() {
 			const inputField = document.getElementById("location-input-field");
 			if (inputField) {
@@ -332,6 +372,8 @@ import Layout from '../layouts/Layout.astro';
 		}
 		window.scrollToLocationInput = scrollToLocationInput;
 		window.useLocationInput = useLocationInput;
+		window.useSecondLocationInput = useSecondLocationInput;
+		window.useLocationInput2 = useLocationInput2;
 		window.useGeolocation = useGeolocation;
 		window.selectRecentSearch = selectRecentSearch;
 		window.clearRecentSearches = clearRecentSearches;
@@ -339,6 +381,28 @@ import Layout from '../layouts/Layout.astro';
 		
 		function useLocationInput() {
 			const input = document.getElementById("location-input-field").value.trim();
+			if (!input) return alert("Please enter a location!");
+			
+			if (/^\d{5}$/.test(input)) {
+				useZipCode(input);
+			} else {
+				searchLocation(input);
+			}
+		}
+		
+		function useSecondLocationInput() {
+			const input = document.getElementById("location-input-field-2").value.trim();
+			if (!input) return alert("Please enter a location!");
+			
+			if (/^\d{5}$/.test(input)) {
+				useZipCode(input);
+			} else {
+				searchLocation(input);
+			}
+		}
+		
+		function useLocationInput2() {
+			const input = document.getElementById("location-input-field-2").value.trim();
 			if (!input) return alert("Please enter a location!");
 			
 			if (/^\d{5}$/.test(input)) {
@@ -1813,6 +1877,9 @@ import Layout from '../layouts/Layout.astro';
 			// Load random hotspots
 			loadRandomHotspots();
 			
+			// Load random locations for second location input
+			loadRandomLocations();
+			
 			// Setup location input
 			const input = document.getElementById("location-input-field");
 			if (input) {
@@ -1820,6 +1887,17 @@ import Layout from '../layouts/Layout.astro';
 					if (e.key === "Enter") {
 						e.preventDefault();
 						useLocationInput();
+					}
+				});
+			}
+
+			// Setup second location input
+			const secondInput = document.getElementById("location-input-field-2");
+			if (secondInput) {
+				secondInput.addEventListener("keydown", function(e) {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						useLocationInput2();
 					}
 				});
 			}

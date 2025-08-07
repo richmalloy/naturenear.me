@@ -410,12 +410,22 @@ const {
 	}
 
 	/* Hide data sections until they have data - but keep input, welcome, and recent searches sections visible */
-	section:not(#location-input):not(#welcome-section):not(#recent-searches):not(.has-data) {
+	section:not(#location-input):not(#location-input-2):not(#welcome-section):not(#recent-searches):not(.has-data) {
 		display: none;
 	}
 
 	/* Input Section - Warm & Inviting */
 	#location-input {
+		text-align: center;
+		margin-bottom: var(--space-8);
+		padding: var(--space-8);
+		background: rgba(255, 255, 255, 0.8); /* Hierarchy background - most prominent */
+		border-radius: var(--radius-lg);
+		/* Removed border for cleaner look */
+		box-shadow: 0 4px 12px rgba(139, 105, 20, 0.15); /* Cleaner shadow */
+	}
+
+	#location-input-2 {
 		text-align: center;
 		margin-bottom: var(--space-8);
 		padding: var(--space-8);
@@ -437,6 +447,8 @@ const {
 		max-width: 500px;
 		margin: 0 auto var(--space-4);
 		gap: var(--space-2);
+		justify-content: center;
+		align-items: center;
 	}
 
 	#location-input-field {
@@ -455,6 +467,18 @@ const {
 		outline: none;
 		border-color: var(--earth-warm);
 		box-shadow: 0 0 0 3px rgba(139, 105, 20, 0.2);
+	}
+
+	#location-input-field-2 {
+		flex: 1;
+		padding: var(--space-4);
+		border: 2px solid var(--stone-mid);
+		border-radius: var(--radius-md);
+		font-size: var(--text-base);
+		font-family: inherit;
+		background: var(--cream);
+		color: var(--stone-dark);
+		transition: all 0.2s ease;
 	}
 
 	.input-submit-btn {
@@ -752,6 +776,7 @@ const {
 		overflow: hidden;
 		position: relative;
 		box-sizing: border-box;
+		z-index: 1; /* Ensure map stays below header */
 	}
 
 	/* Force Leaflet to fill container properly */
@@ -759,11 +784,13 @@ const {
 		width: 100% !important;
 		height: 100% !important;
 		background: #e0e0e0 !important;
+		z-index: 1; /* Ensure map container stays below header */
 	}
 
 	#leaflet-map .leaflet-map-pane {
 		width: 100% !important;
 		height: 100% !important;
+		z-index: 1; /* Ensure map pane stays below header */
 	}
 
 	/* Map Text Styling - Dark and Readable */
@@ -957,6 +984,81 @@ const {
 		background: linear-gradient(90deg, transparent, rgba(139, 105, 20, 0.3), transparent);
 	}
 
+	/* Weather Section - Full Width */
+	#weather {
+		width: 100% !important;
+		max-width: 100% !important;
+		background: #fbf9f6 !important;
+		margin-bottom: var(--space-6);
+		padding: var(--space-6);
+		border-radius: var(--radius-lg);
+		box-shadow: 0 4px 12px rgba(139, 105, 20, 0.15);
+		border: 1px solid rgba(139, 105, 20, 0.1);
+		text-align: center;
+	}
+
+	#weather h2 {
+		text-align: center;
+		margin-bottom: var(--space-4);
+	}
+
+	#weather #weather-data {
+		text-align: center;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	/* Second Location Input Section */
+	.second-location-input {
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: var(--radius-lg);
+		padding: var(--space-6);
+		margin: var(--space-8) 0;
+		text-align: center;
+		box-shadow: 0 4px 12px rgba(139, 105, 20, 0.15);
+		border: 1px solid rgba(139, 105, 20, 0.1);
+	}
+
+	.second-location-input h3 {
+		color: var(--stone-dark);
+		font-size: var(--text-xl);
+		margin-bottom: var(--space-4);
+		font-weight: 600;
+	}
+
+	.second-location-input p {
+		color: var(--stone-mid);
+		margin-bottom: var(--space-4);
+		font-size: var(--text-base);
+	}
+
+	.random-locations {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+		margin-top: var(--space-4);
+	}
+
+	.random-location-btn {
+		background: linear-gradient(135deg, var(--sage-green), var(--earth-warm));
+		color: white;
+		border: none;
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius-md);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.25s ease;
+		box-shadow: 0 2px 6px rgba(107, 124, 50, 0.3);
+	}
+
+	.random-location-btn:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(107, 124, 50, 0.4);
+		background: linear-gradient(135deg, #7a8c3a, #9b7a1a);
+	}
+
 	/* Mobile Responsive */
 	@media (max-width: 768px) {
 		:root {
@@ -1002,6 +1104,15 @@ const {
 		}
 
 		#location-input-field {
+			padding: var(--space-4); /* Larger touch target */
+			font-size: var(--text-base); /* Readable font size */
+		}
+
+		#location-input-2 {
+			padding: var(--space-6); /* Reduced padding */
+		}
+
+		#location-input-2-field {
 			padding: var(--space-4); /* Larger touch target */
 			font-size: var(--text-base); /* Readable font size */
 		}
