@@ -323,23 +323,30 @@ const {
 		/* Removed border for cleaner look */
 	}
 
-	/* Data Sections - Slightly darker background for better title visibility */
-	section {
-		margin-bottom: var(--space-8);
+	/* Data Sections - Clean & Minimal */
+	.data-section {
+		background: rgba(244, 240, 230, 0.4);
 		padding: var(--space-6);
-		background: rgba(244, 240, 230, 0.4); /* Slightly darker with brownish/greenish tint */
+		margin-bottom: var(--space-6);
 		border-radius: var(--radius-lg);
-		border-bottom: 2px solid rgba(139, 105, 20, 0.3); /* Subtle bottom border to separate sections */
-		/* Removed full border for cleaner look */
-		box-shadow: 0 1px 4px rgba(139, 105, 20, 0.05); /* Much lighter shadow */
-		transition: all 0.3s ease;
+		transition: all 0.25s ease;
+		position: relative;
 	}
 
-	section:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 6px 16px rgba(139, 105, 20, 0.2);
-		background: rgba(244, 240, 230, 0.6); /* Slightly darker on hover */
-		border-bottom-color: rgba(139, 105, 20, 0.4); /* Slightly darker border on hover */
+	.data-section:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		bottom: calc(-1 * var(--space-3));
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(139, 105, 20, 0.3), transparent);
+	}
+
+	.data-section:hover {
+		background: rgba(244, 240, 230, 0.6);
+		transform: none;
+		box-shadow: none;
 	}
 
 	section h2 {
@@ -450,6 +457,14 @@ const {
 		margin: 0;
 	}
 
+	/* Two-Column Grid Layout for Data Sections */
+	.data-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-6);
+		margin-bottom: var(--space-8);
+	}
+
 	li {
 		padding: var(--space-3) var(--space-4);
 		background: rgba(255, 255, 255, 0.6); /* Lighter background - a touch darker than current */
@@ -462,10 +477,9 @@ const {
 	}
 
 	li:hover {
-		transform: translateX(var(--space-2)) translateY(-1px);
-		box-shadow: 0 3px 8px rgba(139, 105, 20, 0.15); /* Lighter hover shadow */
 		background: rgba(255, 255, 255, 0.8); /* Brighter hierarchy on hover */
 		border-color: rgba(139, 105, 20, 0.3); /* Slightly stronger border on hover */
+		box-shadow: 0 3px 8px rgba(139, 105, 20, 0.15); /* Lighter hover shadow */
 	}
 
 	li:before {
@@ -881,6 +895,26 @@ const {
 		font-weight: 600;
 	}
 
+	/* General Sections */
+	section {
+		margin-bottom: var(--space-8);
+		padding: var(--space-6);
+		background: rgba(244, 240, 230, 0.4);
+		border-radius: var(--radius-lg);
+		transition: all 0.25s ease;
+		position: relative;
+	}
+
+	section:not(.data-section):not(:last-child)::after {
+		content: '';
+		position: absolute;
+		bottom: calc(-1 * var(--space-3));
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(139, 105, 20, 0.3), transparent);
+	}
+
 	/* Mobile Responsive */
 	@media (max-width: 768px) {
 		:root {
@@ -981,6 +1015,22 @@ const {
 			grid-template-columns: 1fr; /* Single column on mobile */
 			gap: var(--space-6);
 			padding: 0 var(--space-3);
+		}
+
+		/* Mobile responsive for data grid */
+		.data-grid {
+			grid-template-columns: 1fr;
+			gap: var(--space-4);
+		}
+
+		.data-count {
+			min-width: auto;
+			width: 100%;
+			padding: var(--space-3);
+		}
+
+		.count-number {
+			font-size: var(--text-xl);
 		}
 	}
 </style>
