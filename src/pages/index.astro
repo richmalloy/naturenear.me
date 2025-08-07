@@ -14,20 +14,8 @@ import Layout from '../layouts/Layout.astro';
 				</a>
 			</div>
 			<div class="header-right">
-				<nav class="main-nav">
-					<a href="/" class="nav-link">Home</a>
-					<a href="/about" class="nav-link">About</a>
-					<a href="/explore" class="nav-link">Explore</a>
-					<a href="/data" class="nav-link">Data</a>
-				</nav>
+				<!-- Navigation hidden as requested -->
 			</div>
-		</div>
-		<div class="header-sky">
-			<div class="sun header-sun"></div>
-			<div class="flying-bird">🦅</div>
-			<div class="cloud cloud-header-1"></div>
-			<div class="cloud cloud-header-2"></div>
-			<div class="cloud cloud-header-3"></div>
 		</div>
 	</header>
 
@@ -140,101 +128,39 @@ import Layout from '../layouts/Layout.astro';
 
 	<footer>
 		<div class="footer-content">
-			<div class="cloud cloud-1"></div>
-			<div class="cloud cloud-2"></div>
-			<div class="cloud cloud-3"></div>
-			<div class="cloud cloud-4"></div>
-			
 			<div class="footer-section">
-				<div class="section-icon">🌲</div>
-				<h2>About Nature Near Me</h2>
+				<h3>About Nature Near Me</h3>
 				<p>
 					Explore the natural world around you with real-time data on earthquakes, bird sightings, archaeological sites, fossil discoveries, national parks, and weather. Our interactive map combines scientific databases to reveal the hidden stories beneath your feet and in the skies above.
 				</p>
 			</div>
 
 			<div class="footer-section">
-				<div class="section-icon">🔬</div>
 				<h3>Data Sources & Credits</h3>
 				<p>This application is powered by trusted scientific and government databases:</p>
-				<ul class="data-sources">
-					<li>
-						<strong><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener">USGS Earthquake Hazards Program</a></strong>
-						- Real-time earthquake monitoring
-					</li>
-					<li>
-						<strong><a href="https://ebird.org/" target="_blank" rel="noopener">eBird by Cornell Lab</a></strong>
-						- Community-driven bird observation data
-					</li>
-					<li>
-						<strong><a href="https://www.nps.gov/subjects/developer/" target="_blank" rel="noopener">National Park Service API</a></strong>
-						- Official parks and trails information
-					</li>
-					<li>
-						<strong><a href="https://paleobiodb.org/" target="_blank" rel="noopener">Paleobiology Database (PBDB)</a></strong>
-						- Comprehensive fossil discovery records
-					</li>
-					<li>
-						<strong><a href="https://macrostrat.org/" target="_blank" rel="noopener">Macrostrat</a></strong>
-						- Geological formation and bedrock data
-					</li>
-					<li>
-						<strong><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> & <a href="https://nominatim.org/" target="_blank" rel="noopener">Nominatim</a></strong>
-						- Geographic data and location services
-					</li>
-					<li>
-						<strong><a href="https://www.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a></strong>
-						- Historical and archaeological site information
-					</li>
-					<li>
-						<strong><a href="https://wttr.in/" target="_blank" rel="noopener">wttr.in</a></strong>
-						- Weather forecasting service
-					</li>
-				</ul>
+				<p><strong>USGS Earthquake Hazards Program</strong> - Real-time earthquake monitoring</p>
+				<p><strong>eBird by Cornell Lab</strong> - Community-driven bird observation data</p>
+				<p><strong>National Park Service API</strong> - Official parks and trails information</p>
+				<p><strong>Paleobiology Database (PBDB)</strong> - Comprehensive fossil discovery records</p>
+				<p><strong>Macrostrat</strong> - Geological formation and bedrock data</p>
+				<p><strong>OpenStreetMap & Nominatim</strong> - Geographic data and location services</p>
+				<p><strong>Wikipedia</strong> - Historical and archaeological site information</p>
+				<p><strong>wttr.in</strong> - Weather forecasting service</p>
 			</div>
 
 			<div class="footer-section">
-				<div class="section-icon">✨</div>
 				<h3>Features</h3>
-				<ul class="features-list">
-					<li>🌋 Real-time earthquake monitoring within 200km</li>
-					<li>🐦 Recent bird sightings from citizen scientists</li>
-					<li>🏞️ National parks and trails within 600 miles</li>
-					<li>🦴 Fossil discoveries spanning millions of years</li>
-					<li>🏺 Archaeological and historical sites</li>
-					<li>🌦️ Current weather conditions and forecasts</li>
-					<li>🗺️ Interactive map with custom markers</li>
-					<li>🔍 Location-based autocomplete search</li>
-				</ul>
+				<p><strong>🌋 Earthquakes</strong> - Real-time monitoring within 200km</p>
+				<p><strong>🐦 Birds</strong> - Recent sightings from citizen scientists</p>
+				<p><strong>🏞️ Parks</strong> - National parks and trails within 600 miles</p>
+				<p><strong>🦴 Fossils</strong> - Discoveries spanning millions of years</p>
+				<p><strong>🏺 Archaeology</strong> - Historical sites and artifacts</p>
+				<p><strong>🌦️ Weather</strong> - Current conditions and forecasts</p>
 			</div>
 		</div>
 
-		<div class="forest-scene-bottom">
-			<div class="tree tree-1"></div>
-			<div class="tree tree-2"></div>
-			<div class="tree tree-3"></div>
-			<div class="mountain mountain-1"></div>
-			<div class="mountain mountain-2"></div>
-			
-			<!-- Wildlife and ground elements -->
-			<!-- <div class="wildlife deer"></div>
-			<div class="wildlife rabbit"></div>
-			<div class="wildlife fox"></div> -->
-
-			<div class="ground-element rock-1"></div>
-			<div class="ground-element rock-2"></div>
-			<div class="ground-element mushroom-1"></div>
-			<div class="ground-element mushroom-2"></div>
-			<div class="ground-element flower-1"></div>
-			<div class="ground-element flower-2"></div>
-
-			<!-- Simplified footer without bugs for performance -->
 		</div>
-
-		<div class="footer-bottom">
-			<div class="footer-decoration-bottom">
-				<!-- Simplified for performance -->
-			</div>
+		<div style="text-align: center; padding-top: 2rem; border-top: 1px solid rgba(244, 242, 237, 0.2);">
 			<p>&copy; 2025 Earth, Uncovered by Curiosity. Built with open data for scientific exploration and education.</p>
 		</div>
 	</footer>
@@ -1480,21 +1406,34 @@ import Layout from '../layouts/Layout.astro';
 				}
 			});
 			
-			// Force map to resize and fill container properly
+			// Force map to resize and fill container properly - AGGRESSIVE FIX
+			const leafletMapEl = document.getElementById('leaflet-map');
+			if (leafletMapEl) {
+				leafletMapEl.style.width = '100%';
+				leafletMapEl.style.height = '400px';
+			}
+			
 			setTimeout(() => {
 				if (geoMap) {
-					geoMap.invalidateSize();
+					geoMap.invalidateSize(true); // Force full recalculation
 					console.log("🗺️ Map size invalidated to fix layout");
 				}
 			}, 100);
 			
-			// Also invalidate size when container becomes visible
+			// Multiple invalidation attempts for stubborn layout issues
 			setTimeout(() => {
 				if (geoMap) {
-					geoMap.invalidateSize();
+					geoMap.invalidateSize(true);
 					console.log("🗺️ Map size invalidated again for safety");
 				}
 			}, 500);
+			
+			setTimeout(() => {
+				if (geoMap) {
+					geoMap.invalidateSize(true);
+					console.log("🗺️ Final map size invalidation");
+				}
+			}, 1000);
 		}
 		
 		// Create tooltip element once
@@ -1602,23 +1541,48 @@ import Layout from '../layouts/Layout.astro';
 		
 		function useGeolocation() {
 			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(position => {
+				navigator.geolocation.getCurrentPosition(async position => {
 					const { latitude: lat, longitude: lng } = position.coords;
-					userLocationLabel = "Your location";
 					
-					// Set a basic location data for emoji selection
-					currentLocationData = {
-						name: "Your location",
-						address: { state: "" }, // Will use default emoji
-						display_name: "Your current location"
-					};
+					try {
+						// Reverse geocode to get actual location name
+						const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`);
+						const result = await response.json();
+						
+						if (result && result.address) {
+							userLocationLabel = formatLocationName(result);
+							currentLocationData = result; // Store full result for emoji selection
+							console.log("🌍 Reverse geocoded location:", userLocationLabel, result);
+						} else {
+							// Fallback if reverse geocoding fails
+							userLocationLabel = "Your current location";
+							currentLocationData = {
+								name: "Your current location",
+								address: { state: "" },
+								display_name: "Your current location"
+							};
+						}
+					} catch (error) {
+						console.error("Reverse geocoding failed:", error);
+						userLocationLabel = "Your current location";
+						currentLocationData = {
+							name: "Your current location", 
+							address: { state: "" },
+							display_name: "Your current location"
+						};
+					}
 					
 					loadAllData(lat, lng);
-				}, () => {
-					alert("Failed to get location.");
+				}, (error) => {
+					console.error("Geolocation error:", error);
+					const input = document.getElementById("location-input-field");
+					input.placeholder = "Geolocation failed - please enter your location manually";
+					input.focus();
 				});
 			} else {
-				alert("Geolocation not supported.");
+				const input = document.getElementById("location-input-field");
+				input.placeholder = "Geolocation not supported - please enter your location";
+				input.focus();
 			}
 		}
 		
@@ -1742,6 +1706,7 @@ import Layout from '../layouts/Layout.astro';
 			}
 			
 			displayRecentSearches();
+			loadRandomHotspots();
 		});
 	</script>
 </Layout>
