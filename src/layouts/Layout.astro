@@ -901,16 +901,81 @@ const {
 		}
 
 		main {
-			margin: var(--space-4) var(--space-3);
-			padding: var(--space-4);
+			max-width: 100% !important; /* Full width on mobile */
+			margin: var(--space-4) var(--space-2); /* Smaller side margins */
+			padding: var(--space-4); /* Reduced padding */
+			border-radius: var(--radius-md); /* Smaller border radius */
+		}
+
+		section {
+			padding: var(--space-4); /* Reduced section padding */
+			margin-bottom: var(--space-6); /* Reduced section margins */
+		}
+
+		section h2 {
+			font-size: var(--text-xl); /* Smaller headings on mobile */
+		}
+
+		section h3 {
+			font-size: var(--text-lg); /* Smaller subheadings on mobile */
 		}
 
 		.input-container {
 			flex-direction: column;
+			max-width: 100%; /* Full width on mobile */
+		}
+
+		#location-input {
+			padding: var(--space-6); /* Reduced padding */
+		}
+
+		#location-input-field {
+			padding: var(--space-4); /* Larger touch target */
+			font-size: var(--text-base); /* Readable font size */
+		}
+
+		.hotspot-card {
+			margin: var(--space-4) 0; /* Reduced margins */
+			padding: var(--space-6); /* Reduced padding */
+		}
+
+		.search-item {
+			margin: var(--space-3) 0; /* Reduced margins */
+			padding: var(--space-3) var(--space-4); /* Reduced padding */
+		}
+
+		/* Make buttons larger for touch */
+		button {
+			padding: var(--space-4) var(--space-6);
+			min-height: 44px; /* Minimum touch target size */
 		}
 
 		.hero-section h1 {
 			font-size: var(--text-3xl);
+		}
+
+		/* Make navigation buttons smaller on mobile */
+		.nav-btn {
+			padding: var(--space-1) var(--space-3);
+			font-size: var(--text-xs);
+			min-height: 36px; /* Minimum touch target */
+		}
+
+		.header-nav {
+			gap: var(--space-2);
+		}
+
+		/* Improve list readability on mobile */
+		li {
+			padding: var(--space-4); /* Larger touch targets */
+			margin-bottom: var(--space-3);
+		}
+
+		/* Adjust footer for mobile */
+		.footer-content {
+			grid-template-columns: 1fr; /* Single column on mobile */
+			gap: var(--space-6);
+			padding: 0 var(--space-3);
 		}
 	}
 </style>
