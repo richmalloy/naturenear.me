@@ -1501,6 +1501,14 @@ import Layout from '../layouts/Layout.astro';
 					console.log("🗺️ Final map size invalidation");
 				}
 			}, 1000);
+			
+			// Show the location-input-2 section when map is loaded
+			const locationInput2 = document.getElementById('location-input-2');
+			if (locationInput2) {
+				locationInput2.style.display = 'block';
+				locationInput2.classList.add('has-data');
+				console.log("📍 Location input 2 shown below map");
+			}
 		}
 		
 		// Create tooltip element once
