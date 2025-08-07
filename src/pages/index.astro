@@ -14,7 +14,14 @@ import Layout from '../layouts/Layout.astro';
 				</a>
 			</div>
 			<div class="header-right">
-				<!-- Navigation hidden as requested -->
+				<nav class="header-nav">
+					<button data-action="map" class="nav-btn map-btn">
+						🗺️ Map
+					</button>
+					<button data-action="top" class="nav-btn top-btn">
+						⬆️ Top
+					</button>
+				</nav>
 			</div>
 		</div>
 	</header>
@@ -1665,11 +1672,53 @@ import Layout from '../layouts/Layout.astro';
 			return `${Math.floor(hours / 24)}d ago`;
 		}
 		
-
+		// Navigation functions
+		function scrollToMap() {
+			console.log("🗺️ Map button clicked");
+			const mapSection = document.getElementById('map');
+			console.log("Map section found:", mapSection);
+			if (mapSection) {
+				// Force the map section to be visible
+				mapSection.style.display = 'block';
+				mapSection.classList.add('has-data');
+				console.log("✅ Map section made visible");
+				
+				// Scroll to the map
+				mapSection.scrollIntoView({ behavior: 'smooth' });
+				console.log("✅ Scrolled to map");
+			} else {
+				console.error("❌ Map section not found");
+			}
+		}
+		
+		function scrollToTop() {
+			console.log("⬆️ Top button clicked");
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			console.log("✅ Scrolled to top");
+		}
+		
+		// Expose functions globally
+		window.scrollToMap = scrollToMap;
+		window.scrollToTop = scrollToTop;
 		
 		// Initialize
 		document.addEventListener("DOMContentLoaded", function () {
 			console.log("🌍 Page loaded with essential data loading");
+			
+			// Setup navigation buttons
+			const navButtons = document.querySelectorAll('[data-action]');
+			navButtons.forEach(button => {
+				button.addEventListener('click', function() {
+					const action = this.getAttribute('data-action');
+					console.log(`Navigation button clicked: ${action}`);
+					
+					if (action === 'map') {
+						scrollToMap();
+					} else if (action === 'top') {
+						scrollToTop();
+					}
+				});
+			});
 			
 			// Force gradient background
 			document.body.style.backgroundImage = "none";

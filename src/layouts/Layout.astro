@@ -267,9 +267,55 @@ const {
 		line-height: 1.2;
 	}
 
-	/* Hide navigation as requested */
+	/* Navigation - Show the nav buttons */
 	.header-right {
-		display: none;
+		display: flex;
+		align-items: center;
+	}
+
+	.header-nav {
+		display: flex;
+		gap: var(--space-3);
+	}
+
+	.nav-btn {
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: var(--stone-light);
+		padding: var(--space-2) var(--space-4);
+		border-radius: var(--radius-md);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.25s ease;
+		backdrop-filter: blur(10px);
+	}
+
+	.nav-btn:hover {
+		background: rgba(255, 255, 255, 0.2);
+		border-color: rgba(255, 255, 255, 0.3);
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(45, 42, 38, 0.2);
+	}
+
+	.map-btn {
+		background: rgba(107, 124, 50, 0.2);
+		border-color: rgba(107, 124, 50, 0.3);
+	}
+
+	.map-btn:hover {
+		background: rgba(107, 124, 50, 0.3);
+		border-color: rgba(107, 124, 50, 0.4);
+	}
+
+	.top-btn {
+		background: rgba(139, 105, 20, 0.2);
+		border-color: rgba(139, 105, 20, 0.3);
+	}
+
+	.top-btn:hover {
+		background: rgba(139, 105, 20, 0.3);
+		border-color: rgba(139, 105, 20, 0.4);
 	}
 
 	/* Main Content - Warm Earth Tone Layout */
