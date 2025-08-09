@@ -1,12 +1,12 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import compress from 'astro-compress';
+import { defineConfig } from "astro/config";
+import compress from "astro-compress";
 
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: 'auto',
-    assets: '_astro'
+    inlineStylesheets: "auto",
+    assets: "_astro",
   },
   compressHTML: true,
   integrations: [
@@ -16,7 +16,7 @@ export default defineConfig({
       Image: false, // We'll handle images separately
       JavaScript: true,
       SVG: true,
-    })
+    }),
   ],
   vite: {
     build: {

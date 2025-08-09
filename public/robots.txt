@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://nature-near-me.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Disallow admin or private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+
+# Allow all nature-related content
+Allow: /national-parks
+Allow: /wildlife
+Allow: /earthquakes
+Allow: /birds
+Allow: /weather
+Allow: /fossils
+Allow: /archaeology
+Allow: /disclaimer 

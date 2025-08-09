@@ -2,35 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout>
-	<header>
-		<div class="header-content">
-			<div class="header-left">
-				<a href="/" title="Return to Home" style="text-decoration: none; display: inline-block">
-					<div class="logo-container">
-						<img src="/images/logo.png" alt="Nature Near Me Logo" class="logo-image" width="32" height="32" loading="eager" decoding="sync" />
-						<div class="site-logo-text">Nature Near Me</div>
-					</div>
-				</a>
-			</div>
-			<div class="header-right">
-				<nav class="header-nav">
-					<button data-action="map" class="nav-btn map-btn">
-						🗺️ Map
-					</button>
-					<button data-action="top" class="nav-btn top-btn">
-						⬆️ Top
-					</button>
-				</nav>
-			</div>
-		</div>
-	</header>
-
+<Layout currentPage="home">
 	<main>
 		<h1 class="sr-only">Nature Near Me - Explore Wildlife, Geology, and Weather Data</h1>
 
 		<section id="location-input">
-			<p>Enter your ZIP code, city & state, or use your location:</p>
+			<div class="intro-message">
+				<h2>Discover Nature Around You</h2>
+				<p><strong>Simply enter your location below to explore wildlife sightings, national parks, archaeological sites, fossil discoveries, earthquake activity, and weather data in your area.</strong></p>
+				<p>Get instant access to real-time natural wonders and scientific data from trusted sources like the USGS, National Park Service, and citizen science communities.</p>
+			</div>
 			<div class="input-container">
 				<input type="text" id="location-input-field" placeholder="e.g. 87501 or Santa Fe, NM" />
 				<button class="input-submit-btn" onclick="useLocationInput()" title="Search">
@@ -124,17 +105,16 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 		</section>
 
+		<div id="recent-searches-content">
 		<section id="recent-searches">
-			<h2>🕒 Recent Searches</h2>
-			<div id="recent-searches-content">
 				<div id="your-recent-searches">
-					<h3>Your Recent</h3>
+					<h3>Your Recent Searches</h3>
 					<div id="personal-searches" class="search-list">
 						<p class="no-searches">No recent searches yet</p>
 					</div>
 				</div>
 				<div id="community-recent-searches">
-					<h3>🌍 Explore Where Others Are Adventuring</h3>
+					<h3>Explore Where Others Are Adventuring</h3>
 					<div id="community-searches" class="search-list">
 						<!-- Hotspot cards will be dynamically loaded here -->
 					</div>
@@ -142,45 +122,6 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 		</section>
 	</main>
-
-	<footer>
-		<div class="footer-content">
-			<div class="footer-section">
-				<h3>About Nature Near Me</h3>
-				<p>
-					Explore the natural world around you with real-time data on earthquakes, bird sightings, archaeological sites, fossil discoveries, national parks, and weather. Our interactive map combines scientific databases to reveal the hidden stories beneath your feet and in the skies above.
-				</p>
-			</div>
-
-			<div class="footer-section">
-				<h3>Data Sources & Credits</h3>
-				<p>This application is powered by trusted scientific and government databases:</p>
-				<p><strong>USGS Earthquake Hazards Program</strong> - Real-time earthquake monitoring</p>
-				<p><strong>eBird by Cornell Lab</strong> - Community-driven bird observation data</p>
-				<p><strong>National Park Service API</strong> - Official parks and trails information</p>
-				<p><strong>Paleobiology Database (PBDB)</strong> - Comprehensive fossil discovery records</p>
-				<p><strong>Macrostrat</strong> - Geological formation and bedrock data</p>
-				<p><strong>OpenStreetMap & Nominatim</strong> - Geographic data and location services</p>
-				<p><strong>Wikipedia</strong> - Historical and archaeological site information</p>
-				<p><strong>wttr.in</strong> - Weather forecasting service</p>
-			</div>
-
-			<div class="footer-section">
-				<h3>Features</h3>
-				<p><strong>🌋 Earthquakes</strong> - Real-time monitoring within 200km</p>
-				<p><strong>🐦 Birds</strong> - Recent sightings from citizen scientists</p>
-				<p><strong>🏞️ Parks</strong> - National parks and trails within 600 miles</p>
-				<p><strong>🦴 Fossils</strong> - Discoveries spanning millions of years</p>
-				<p><strong>🏺 Archaeology</strong> - Historical sites and artifacts</p>
-				<p><strong>🌦️ Weather</strong> - Current conditions and forecasts</p>
-			</div>
-		</div>
-
-		</div>
-		<div style="text-align: center; padding-top: 2rem; border-top: 1px solid rgba(244, 242, 237, 0.2);">
-			<p>&copy; 2025 Earth, Uncovered by Curiosity. Built with open data for scientific exploration and education.</p>
-		</div>
-	</footer>
 
 	<script>
 		// Essential functions for location search and data loading
@@ -266,13 +207,7 @@ import Layout from '../layouts/Layout.astro';
 				subtitle: "Alpine tundra & elk herds",
 				features: ["🦌 Elk", "🦅 Raptors", "🌸 Alpine"]
 			},
-			{
-				name: "Death Valley National Park, California",
-				emoji: "🏜️",
-				title: "Death Valley National Park, CA",
-				subtitle: "Extreme heat & unique geology",
-				features: ["🦎 Extreme", "💎 Minerals", "🌵 Adapted"]
-			},
+
 			{
 				name: "Big Bend National Park, Texas",
 				emoji: "🏜️",
@@ -1803,7 +1738,6 @@ import Layout from '../layouts/Layout.astro';
 				const html = searches.map(search => `
 					<div class="search-item" onclick="selectRecentSearch('${search.city}', '${search.state}')">
 						<span class="search-location">${search.displayName}</span>
-						<span class="search-time">${getTimeAgo(search.timestamp)}</span>
 					</div>
 				`).join('');
 				

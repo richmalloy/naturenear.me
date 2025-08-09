@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "Legal Disclaimer - Nature Near Me";
+const description = "Important legal information and disclaimers regarding the use of Nature Near Me website and services.";
+---
+
+<Layout title={title} description={description} currentPage="disclaimer">
+<div class="container">
+    <header class="header">
+        <h1>Legal Disclaimer</h1>
+        <p>Important information about our services and your responsibilities</p>
+    </header>
+
+    <div class="disclaimer-content">
+        <h2>General Disclaimer</h2>
+        <p>Nature Near Me provides information and services for educational and recreational purposes only. While we strive to provide accurate and up-to-date information, we make no warranties or representations regarding the accuracy, completeness, reliability, or suitability of any information, products, services, or related graphics contained on this website for any purpose.</p>
+        
+        <h2>No Professional Advice</h2>
+        <p>The information provided on this website is not intended to constitute professional advice of any kind, including but not limited to legal, medical, safety, or travel advice. Users should consult with appropriate professionals for specific advice related to their individual circumstances.</p>
+        
+        <h2>Outdoor Activities and Safety</h2>
+        <p>Outdoor activities carry inherent risks. Users are responsible for:</p>
+        <ul>
+            <li>Assessing their own physical fitness and capabilities</li>
+            <li>Checking current weather conditions and forecasts</li>
+            <li>Carrying appropriate safety equipment and supplies</li>
+            <li>Following local regulations and guidelines</li>
+            <li>Respecting private property and protected areas</li>
+            <li>Maintaining safe distances from wildlife</li>
+        </ul>
+        
+        <h2>Weather and Environmental Conditions</h2>
+        <p>Weather and environmental conditions can change rapidly and may affect the safety and accessibility of outdoor locations. Users should:</p>
+        <ul>
+            <li>Check current weather forecasts before planning outdoor activities</li>
+            <li>Be prepared for changing conditions</li>
+            <li>Have backup plans for inclement weather</li>
+            <li>Monitor local emergency alerts and warnings</li>
+        </ul>
+        
+        <h2>Wildlife and Nature Safety</h2>
+        <p>When observing wildlife or exploring natural areas:</p>
+        <ul>
+            <li>Maintain safe distances from all wildlife</li>
+            <li>Never feed or approach wild animals</li>
+            <li>Be aware of potential hazards such as poisonous plants</li>
+            <li>Follow Leave No Trace principles</li>
+            <li>Respect seasonal closures and nesting areas</li>
+        </ul>
+        
+        <h2>Data Accuracy and Availability</h2>
+        <p>Information provided on this website may include:</p>
+        <ul>
+            <li>Data from third-party sources that we cannot guarantee</li>
+            <li>Information that may be outdated or incomplete</li>
+            <li>Location data that may not be precise</li>
+            <li>Service availability that may change without notice</li>
+        </ul>
+        
+        <h2>Third-Party Services</h2>
+        <p>This website may integrate with or link to third-party services, including:</p>
+        <ul>
+            <li>Weather data providers</li>
+            <li>Mapping services</li>
+            <li>Wildlife observation platforms</li>
+            <li>Government data sources</li>
+        </ul>
+        <p>We are not responsible for the accuracy, availability, or content of third-party services.</p>
+        
+        <h2>Limitation of Liability</h2>
+        <p>In no event shall Nature Near Me, its operators, or contributors be liable for any direct, indirect, incidental, special, or consequential damages arising from:</p>
+        <ul>
+            <li>Use of information provided on this website</li>
+            <li>Outdoor activities or travel based on our recommendations</li>
+            <li>Injuries or accidents during outdoor activities</li>
+            <li>Property damage or loss</li>
+            <li>Service interruptions or technical issues</li>
+        </ul>
+        
+        <h2>Indemnification</h2>
+        <p>Users agree to indemnify and hold harmless Nature Near Me, its operators, and contributors from any claims, damages, or expenses arising from their use of this website or participation in outdoor activities.</p>
+        
+        <h2>Changes to Disclaimer</h2>
+        <p>We reserve the right to modify this disclaimer at any time. Continued use of this website constitutes acceptance of any changes.</p>
+        
+        <h2>Contact Information</h2>
+        <p>If you have questions about this disclaimer or our services, please contact us through the appropriate channels provided on this website.</p>
+        
+        <div class="last-updated">
+            <p><strong>Last Updated:</strong> August 2024</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #e8d5c4;
+        color: #2d2a26;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: transparent;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #2d2a26;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2d2a26;
+    }
+
+    .header p {
+        font-size: 1.2rem;
+        color: #5a4f42;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .disclaimer-content {
+        background: #d4c4b5;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+    }
+
+    .disclaimer-content h2 {
+        color: #8B4513;
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem 0;
+        font-weight: 700;
+    }
+
+    .disclaimer-content h2:first-child {
+        margin-top: 0;
+    }
+
+    .disclaimer-content p {
+        color: #5a4f42;
+        margin-bottom: 1rem;
+        line-height: 1.7;
+    }
+
+    .disclaimer-content ul {
+        color: #5a4f42;
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    .disclaimer-content li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+    }
+
+    .last-updated {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #c4b5a6;
+        text-align: center;
+    }
+
+    .last-updated p {
+        color: #8B4513;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .disclaimer-content {
+            padding: 1.5rem;
+        }
+        
+        .disclaimer-content h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+</Layout> 

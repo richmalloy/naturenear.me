@@ -1,0 +1,337 @@
+---
+// HistoricalEarthquakes.astro - Historical earthquake cards component
+
+// Historical earthquake data
+const historicalEarthquakes = [
+  {
+    id: "1906-san-francisco",
+    name: "1906 San Francisco Earthquake",
+    location: "San Francisco, California",
+    date: "April 18, 1906",
+    magnitude: 7.9,
+    casualties: "3,000+ deaths",
+    damage: "$400 million (1906 dollars)",
+    description: "One of the most devastating earthquakes in U.S. history, causing widespread destruction and fires that burned for three days.",
+    significance: "Led to major improvements in earthquake engineering and building codes",
+    coordinates: { lat: 37.7749, lng: -122.4194 },
+    image: "/images/earth-crust.webp"
+  },
+  {
+    id: "1964-alaska",
+    name: "1964 Great Alaska Earthquake",
+    location: "Prince William Sound, Alaska",
+    date: "March 27, 1964",
+    magnitude: 9.2,
+    casualties: "131 deaths",
+    damage: "$2.3 billion (2020 dollars)",
+    description: "The most powerful earthquake ever recorded in North America, lasting nearly 5 minutes and generating a devastating tsunami.",
+    significance: "Largest earthquake in North American history, led to establishment of tsunami warning systems",
+    coordinates: { lat: 61.0449, lng: -147.4064 },
+    image: "/images/coastal-cliffs-ocean.webp"
+  },
+  {
+    id: "1811-new-madrid",
+    name: "1811-1812 New Madrid Earthquakes",
+    location: "New Madrid, Missouri",
+    date: "December 1811 - February 1812",
+    magnitude: "7.5-8.0",
+    casualties: "Unknown",
+    damage: "Extensive landscape changes",
+    description: "Series of powerful intraplate earthquakes that caused the Mississippi River to flow backward and created Reelfoot Lake.",
+    significance: "Largest earthquakes in the central United States, demonstrated intraplate seismic potential",
+    coordinates: { lat: 36.5864, lng: -89.5279 },
+    image: "/images/desert-canyon-formation.webp"
+  },
+  {
+    id: "1989-loma-prieta",
+    name: "1989 Loma Prieta Earthquake",
+    location: "Santa Cruz Mountains, California",
+    date: "October 17, 1989",
+    magnitude: 6.9,
+    casualties: "63 deaths",
+    damage: "$6 billion",
+    description: "Struck during the World Series, causing the Bay Bridge to collapse and extensive damage in San Francisco and Oakland.",
+    significance: "Highlighted the vulnerability of infrastructure and led to major seismic retrofitting programs",
+    coordinates: { lat: 37.0364, lng: -121.8804 },
+    image: "/images/mountain-valley-vista.webp"
+  },
+  {
+    id: "1886-charleston",
+    name: "1886 Charleston Earthquake",
+    location: "Charleston, South Carolina",
+    date: "August 31, 1886",
+    magnitude: 7.0,
+    casualties: "60+ deaths",
+    damage: "$6 million (1886 dollars)",
+    description: "The most destructive earthquake in the eastern United States, felt across 2.5 million square miles.",
+    significance: "Demonstrated that the East Coast is not immune to major earthquakes",
+    coordinates: { lat: 32.7765, lng: -79.9311 },
+    image: "/images/aerial-forest-landscape.webp"
+  },
+  {
+    id: "1994-northridge",
+    name: "1994 Northridge Earthquake",
+    location: "Northridge, California",
+    date: "January 17, 1994",
+    magnitude: 6.7,
+    casualties: "57 deaths",
+    damage: "$20 billion",
+    description: "Struck in the early morning hours, causing the collapse of freeway overpasses and extensive damage to buildings.",
+    significance: "Most expensive natural disaster in U.S. history at the time, led to improved building codes",
+    coordinates: { lat: 34.2284, lng: -118.5368 },
+    image: "/images/lake-mountain-reflection.webp"
+  }
+];
+
+function getMagnitudeColor(magnitude: number | string): string {
+  const mag = typeof magnitude === 'string' ? parseFloat(magnitude.split('-')[0]) : magnitude;
+  if (mag >= 8.0) return '#8B0000'; // Dark red - Great
+  if (mag >= 7.0) return '#FF0000'; // Red - Major
+  if (mag >= 6.0) return '#FF4500'; // Orange red - Strong
+  return '#FFA500'; // Orange - Moderate
+}
+
+function getMagnitudeLabel(magnitude: number | string): string {
+  const mag = typeof magnitude === 'string' ? parseFloat(magnitude.split('-')[0]) : magnitude;
+  if (mag >= 8.0) return 'Great';
+  if (mag >= 7.0) return 'Major';
+  if (mag >= 6.0) return 'Strong';
+  return 'Moderate';
+}
+---
+
+<section class="historical-earthquakes">
+  <h2>🏛️ Historical Earthquakes in America</h2>
+  <p class="section-description">
+    Explore some of the most significant earthquakes in U.S. history and their lasting impact on our understanding of seismic hazards.
+  </p>
+  
+  <div class="earthquake-cards">
+    {historicalEarthquakes.map((quake) => (
+      <div class="earthquake-card" key={quake.id}>
+        <div class="card-image">
+          <img src={quake.image} alt={`${quake.location} landscape`} loading="lazy" />
+          <div class="magnitude-overlay" style={`background-color: ${getMagnitudeColor(quake.magnitude)}`}>
+            M{quake.magnitude}
+          </div>
+        </div>
+        
+        <div class="card-content">
+          <h3 class="quake-name">{quake.name}</h3>
+          <div class="quake-location">📍 {quake.location}</div>
+          <div class="quake-date">📅 {quake.date}</div>
+          
+          <div class="quake-details">
+            <div class="detail-item">
+              <span class="detail-label">Magnitude:</span>
+              <span class="detail-value magnitude-badge" style={`background-color: ${getMagnitudeColor(quake.magnitude)}`}>
+                M{quake.magnitude} ({getMagnitudeLabel(quake.magnitude)})
+              </span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Casualties:</span>
+              <span class="detail-value">{quake.casualties}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Damage:</span>
+              <span class="detail-value">{quake.damage}</span>
+            </div>
+          </div>
+          
+          <div class="quake-description">
+            <p>{quake.description}</p>
+          </div>
+          
+          <div class="quake-significance">
+            <strong>Historical Significance:</strong> {quake.significance}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .historical-earthquakes {
+    margin: 40px 0;
+  }
+
+  .historical-earthquakes h2 {
+    text-align: center;
+    color: #2d2a26;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+
+  .section-description {
+    text-align: center;
+    color: #5a4f42;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .earthquake-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  .earthquake-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
+  }
+
+  .earthquake-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  }
+
+  .card-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .earthquake-card:hover .card-image img {
+    transform: scale(1.05);
+  }
+
+  .magnitude-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .card-content {
+    padding: 25px;
+  }
+
+  .quake-name {
+    color: #2d2a26;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .quake-location {
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .quake-date {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  .quake-details {
+    margin-bottom: 20px;
+  }
+
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .detail-label {
+    font-weight: 600;
+    color: #2d2a26;
+  }
+
+  .detail-value {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .magnitude-badge {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  }
+
+  .quake-description {
+    margin-bottom: 15px;
+  }
+
+  .quake-description p {
+    color: #5a4f42;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .quake-significance {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #6b7c32;
+    font-size: 0.9rem;
+    color: #2d2a26;
+  }
+
+  .quake-significance strong {
+    color: #6b7c32;
+  }
+
+  @media (max-width: 768px) {
+    .earthquake-cards {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .detail-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .quake-name {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .historical-earthquakes h2 {
+      font-size: 1.8rem;
+    }
+
+    .section-description {
+      font-size: 1rem;
+    }
+  }
+</style> 

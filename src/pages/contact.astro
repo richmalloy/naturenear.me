@@ -1,0 +1,230 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "Contact Us - Nature Near Me";
+const description = "Get in touch with the Nature Near Me team. We're here to help with questions, feedback, and support for your nature exploration journey.";
+---
+
+<Layout title={title} description={description} currentPage="contact">
+<div class="container">
+    <header class="header">
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you</p>
+    </header>
+
+    <div class="contact-content">
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p>Have questions about our services? Want to share your nature experiences? Need technical support? We're here to help!</p>
+            
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <h3>General Inquiries</h3>
+                    <p>For general questions about our platform, features, or services.</p>
+                    <p><strong>Email:</strong> info@naturenear.me</p>
+                </div>
+                
+                <div class="contact-method">
+                    <h3>Technical Support</h3>
+                    <p>Experiencing issues with the website or need help with features?</p>
+                    <p><strong>Email:</strong> support@naturenear.me</p>
+                </div>
+                
+                <div class="contact-method">
+                    <h3>Feedback & Suggestions</h3>
+                    <p>We welcome your ideas for improving our platform and services.</p>
+                    <p><strong>Email:</strong> feedback@naturenear.me</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h3>How accurate is the location data?</h3>
+                <p>We source data from multiple reliable providers including USGS, eBird, and other public databases. While we strive for accuracy, we recommend verifying information independently before planning outdoor activities.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Is the weather information real-time?</h3>
+                <p>Weather data is updated regularly but may not reflect current conditions. Always check local weather forecasts before outdoor activities.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>How do I report incorrect information?</h3>
+                <p>Please email us at support@naturenear.me with details about the incorrect information, including the specific location and data type.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Can I suggest new features?</h3>
+                <p>Absolutely! We welcome feature suggestions and ideas for improving our platform. Email us at feedback@naturenear.me with your ideas.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>Is my location data private?</h3>
+                <p>We respect your privacy. Location data is only used to provide relevant information and is not stored or shared with third parties.</p>
+            </div>
+        </div>
+        
+        <div class="response-time">
+            <h2>Response Times</h2>
+            <p>We aim to respond to all inquiries within 24-48 hours during business days. For urgent technical issues, we'll prioritize your request.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #e8d5c4;
+        color: #2d2a26;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: transparent;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #2d2a26;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2d2a26;
+    }
+
+    .header p {
+        font-size: 1.2rem;
+        color: #5a4f42;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .contact-content {
+        background: #d4c4b5;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+    }
+
+    .contact-content h2 {
+        color: #8B4513;
+        font-size: 1.8rem;
+        margin: 2rem 0 1rem 0;
+        font-weight: 700;
+    }
+
+    .contact-content h2:first-child {
+        margin-top: 0;
+    }
+
+    .contact-content p {
+        color: #5a4f42;
+        margin-bottom: 1rem;
+        line-height: 1.7;
+    }
+
+    .contact-methods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .contact-method {
+        background: #c4b5a6;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #6b7c32;
+    }
+
+    .contact-method h3 {
+        color: #2d2a26;
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .contact-method p {
+        color: #5a4f42;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-method strong {
+        color: #6b7c32;
+    }
+
+    .faq-section {
+        margin-top: 3rem;
+    }
+
+    .faq-item {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #c4b5a6;
+    }
+
+    .faq-item:last-child {
+        border-bottom: none;
+    }
+
+    .faq-item h3 {
+        color: #A0522D;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .faq-item p {
+        color: #5a4f42;
+        line-height: 1.6;
+    }
+
+    .response-time {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #c4b5a6;
+    }
+
+    .response-time h2 {
+        color: #8B4513;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .contact-content {
+            padding: 1.5rem;
+        }
+        
+        .contact-methods {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .contact-method {
+            padding: 1rem;
+        }
+    }
+</style>
+</Layout> 

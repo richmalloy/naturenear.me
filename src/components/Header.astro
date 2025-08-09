@@ -1,0 +1,142 @@
+---
+export interface Props {
+	currentPage?: string;
+}
+
+const { currentPage = "home" } = Astro.props;
+---
+
+<header>
+	<div class="header-content">
+		<div class="header-left">
+			<a href="/" title="Return to Home" style="text-decoration: none; display: inline-block">
+				<div class="logo-container">
+					<img src="/images/logo.png" alt="Nature Near Me Logo" class="logo-image" width="32" height="32" loading="eager" decoding="sync" />
+					<div class="site-logo-text">Nature Near Me</div>
+				</div>
+			</a>
+		</div>
+		<!-- <div class="header-right">
+			<nav class="header-nav">
+				<a href="/national-parks" class={`nav-btn ${currentPage === 'parks' ? 'active' : ''}`} title="National Parks">
+					PARKS
+				</a>
+				<a href="/wildlife" class={`nav-btn ${currentPage === 'wildlife' ? 'active' : ''}`} title="Wildlife">
+					WILDLIFE
+				</a>
+				<a href="/earthquakes" class={`nav-btn ${currentPage === 'earthquakes' ? 'active' : ''}`} title="Earthquakes">
+					QUAKES
+				</a>
+				<a href="/" class={`nav-btn ${currentPage === 'home' ? 'active' : ''}`} title="Home">
+					HOME
+				</a>
+			</nav>
+		</div> -->
+	</div>
+</header>
+
+<style>
+	header {
+		background: var(--stone-dark);
+		color: var(--stone-light);
+		border-bottom: 3px solid var(--earth-warm);
+		padding: var(--space-4) 0;
+		position: sticky;
+		top: 0;
+		z-index: 1000;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.header-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 var(--space-4);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.header-left {
+		display: flex;
+		align-items: center;
+	}
+
+	.logo-container {
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+	}
+
+	.logo-image {
+		width: 40px !important;
+		height: 40px !important;
+		display: block;
+	}
+
+	.site-logo-text {
+		font-family: inherit;
+		font-size: 24px;
+		font-weight: 800;
+		color: var(--stone-light);
+		line-height: 1.2;
+	}
+
+	.header-right {
+		display: flex;
+		align-items: center;
+	}
+
+	.header-nav {
+		display: flex;
+		gap: var(--space-4);
+		align-items: center;
+	}
+
+	.nav-btn {
+		background: transparent;
+		border: none;
+		color: var(--stone-light);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		padding: var(--space-2) var(--space-3);
+		border-radius: var(--radius-md);
+		text-decoration: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
+		display: inline-block;
+	}
+
+	.nav-btn:hover {
+		background: rgba(244, 242, 237, 0.1);
+		color: var(--stone-light);
+		transform: translateY(-1px);
+	}
+
+	.nav-btn.active {
+		background: #2e2a27;
+		color: var(--stone-light);
+		font-weight: 700;
+		box-shadow: 0 2px 8px rgba(46, 42, 39, 0.3);
+	}
+
+	@media (max-width: 768px) {
+		.header-content {
+			padding: 0 var(--space-3);
+		}
+
+		.header-nav {
+			gap: var(--space-2);
+		}
+
+		.nav-btn {
+			font-size: var(--text-xs);
+			padding: var(--space-1) var(--space-2);
+		}
+
+		.site-logo-text {
+			font-size: 20px;
+		}
+	}
+</style> 

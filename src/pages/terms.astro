@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+	title="Terms of Service - Nature Near Me"
+	description="Terms of service for Nature Near Me - Learn about the terms and conditions for using our nature discovery platform."
+	currentPage="terms"
+>
+	<div class="container mx-auto px-4 py-8 max-w-4xl">
+		<h1 class="text-4xl font-bold text-gray-900 mb-8">Terms of Service</h1>
+		
+		<div class="prose prose-lg max-w-none">
+			<p class="text-gray-600 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
+			
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Acceptance of Terms</h2>
+				<p class="mb-4">By accessing and using Nature Near Me ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">2. Description of Service</h2>
+				<p class="mb-4">Nature Near Me is a web application that provides:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Interactive maps showing earthquakes, wildlife sightings, and natural features</li>
+					<li>Real-time data from USGS, eBird, and other nature data sources</li>
+					<li>Weather information and national park details</li>
+					<li>Educational content about local nature and geology</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">3. User Responsibilities</h2>
+				<p class="mb-4">As a user of Nature Near Me, you agree to:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Use the service for lawful purposes only</li>
+					<li>Not attempt to gain unauthorized access to our systems</li>
+					<li>Not interfere with or disrupt the service</li>
+					<li>Respect the intellectual property rights of others</li>
+					<li>Not use the service to harm others or their property</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Data and Accuracy</h2>
+				<p class="mb-4">While we strive to provide accurate and up-to-date information:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Data is provided "as is" without warranties of accuracy</li>
+					<li>We rely on third-party data sources (USGS, eBird, etc.)</li>
+					<li>Information may be delayed or incomplete</li>
+					<li>Users should verify critical information independently</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">5. Intellectual Property</h2>
+				<p class="mb-4">The content and functionality of Nature Near Me are protected by copyright and other intellectual property laws:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Our original content, design, and code are our property</li>
+					<li>Third-party data sources retain their respective rights</li>
+					<li>You may not copy, modify, or distribute our content without permission</li>
+					<li>Educational and personal use is generally permitted</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">6. Limitation of Liability</h2>
+				<p class="mb-4">Nature Near Me and its operators are not liable for:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Any damages arising from use of the service</li>
+					<li>Inaccuracies in data or information provided</li>
+					<li>Service interruptions or technical issues</li>
+					<li>Decisions made based on information from our service</li>
+					<li>Indirect, incidental, or consequential damages</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">7. Service Availability</h2>
+				<p class="mb-4">We strive to maintain high availability but cannot guarantee:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Uninterrupted service availability</li>
+					<li>Access to all features at all times</li>
+					<li>Compatibility with all devices or browsers</li>
+					<li>Real-time data updates</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">8. Third-Party Services</h2>
+				<p class="mb-4">Our service integrates with third-party data sources and services:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>USGS for earthquake and geological data</li>
+					<li>eBird for bird sighting information</li>
+					<li>Weather services for meteorological data</li>
+					<li>These services have their own terms and privacy policies</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">9. Termination</h2>
+				<p class="mb-4">We reserve the right to:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Modify or discontinue the service at any time</li>
+					<li>Restrict access for violations of these terms</li>
+					<li>Update these terms with notice to users</li>
+					<li>Remove content that violates our policies</li>
+				</ul>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">10. Governing Law</h2>
+				<p class="mb-4">These terms are governed by the laws of the jurisdiction where Nature Near Me operates. Any disputes will be resolved in accordance with applicable law.</p>
+			</section>
+
+			<section class="mb-8">
+				<h2 class="text-2xl font-semibold text-gray-800 mb-4">11. Contact Information</h2>
+				<p class="mb-4">For questions about these terms, please contact us:</p>
+				<ul class="list-disc pl-6 mb-4 space-y-2">
+					<li>Email: legal@naturenear.me</li>
+					<li>Website: <a href="/contact" class="text-blue-600 hover:text-blue-800">Contact Form</a></li>
+				</ul>
+			</section>
+
+			<div class="mt-12 pt-8 border-t border-gray-200">
+				<a href="/" class="text-blue-600 hover:text-blue-800">← Back to Nature Near Me</a>
+			</div>
+		</div>
+	</div>
+</Layout> 

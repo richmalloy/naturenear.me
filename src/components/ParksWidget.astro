@@ -59,7 +59,6 @@ try {
     {fullName: "Grand Canyon National Park", states: "AZ", latitude: "36.0544", longitude: "-112.1401", designation: "National Park", description: "Immense canyon carved by the Colorado River in Arizona"},
     {fullName: "Zion National Park", states: "UT", latitude: "37.2982", longitude: "-113.0263", designation: "National Park", description: "Steep red cliffs and emerald pools in Utah"},
     {fullName: "Arches National Park", states: "UT", latitude: "38.7331", longitude: "-109.5925", designation: "National Park", description: "More than 2,000 natural stone arches"},
-    {fullName: "Mesa Verde National Park", states: "CO", latitude: "37.1853", longitude: "-108.4618", designation: "National Park", description: "Ancestral Puebloan cliff dwellings"},
     
     // West Coast
     {fullName: "Yosemite National Park", states: "CA", latitude: "37.8651", longitude: "-119.5383", designation: "National Park", description: "Granite cliffs, waterfalls, and giant sequoias"},
@@ -115,7 +114,7 @@ function getParkEmoji(designation) {
       <div>
         <p>📍 Found {parksData.length} national parks near {locationName} {error ? `(using fallback data)` : `from NPS database`}</p>
         <ul class="data-list">
-          {parksData.slice(0, 6).map(park => (
+          {parksData.slice(0, 5).map(park => (
             <li class="park-item">
               <div>
                 <strong>{getParkEmoji(park.designation)} {park.fullName}</strong><br/>

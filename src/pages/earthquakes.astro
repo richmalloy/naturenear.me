@@ -1,0 +1,243 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "Earthquakes Near Me - Real-time Seismic Activity";
+const description = "Discover real-time earthquake data and seismic activity near your location. Get instant access to USGS earthquake information, magnitude data, and safety tips.";
+---
+
+<Layout title={title} description={description} currentPage="earthquakes">
+<div class="container">
+    <header class="header">
+        <h1>Earthquakes Near You</h1>
+        <p>Real-time seismic activity and earthquake data from the US Geological Survey</p>
+    </header>
+
+    <div class="cta-section">
+        <h2>Stay Informed About Seismic Activity</h2>
+        <p>Get instant access to real-time earthquake data, magnitude information, and safety guidelines for your area.</p>
+        <a href="/" class="cta-button">Find Earthquakes Near Me</a>
+    </div>
+
+    <!-- Hotspot Cards Section -->
+    <div class="hotspot-cards">
+        <h2>Earthquake & Geology Hotspots</h2>
+        <p>Quick access to seismic and geological information near your location</p>
+        
+        <div class="cards-grid">
+            <!-- Seismic Activity Card -->
+            <a href="/earthquakes" class="hotspot-card seismic-card">
+                <div class="card-icon">🌋</div>
+                <h3>Seismic Activity</h3>
+                <p>Monitor real-time earthquake data and seismic events</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Geological Formations Card -->
+            <a href="/earthquakes" class="hotspot-card geology-card">
+                <div class="card-icon">🏔️</div>
+                <h3>Geological Formations</h3>
+                <p>Explore mountains, canyons, and rock formations</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Fault Lines Card -->
+            <a href="/earthquakes" class="hotspot-card faults-card">
+                <div class="card-icon">⚡</div>
+                <h3>Fault Lines</h3>
+                <p>Learn about earthquake fault systems in your area</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Mineral Resources Card -->
+            <a href="/earthquakes" class="hotspot-card minerals-card">
+                <div class="card-icon">💎</div>
+                <h3>Mineral Resources</h3>
+                <p>Discover valuable minerals and geological resources</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Volcanic Activity Card -->
+            <a href="/earthquakes" class="hotspot-card volcanic-card">
+                <div class="card-icon">🌋</div>
+                <h3>Volcanic Activity</h3>
+                <p>Monitor volcanoes and volcanic regions</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Emergency Prep Card -->
+            <a href="/earthquakes" class="hotspot-card emergency-card">
+                <div class="card-icon">🚨</div>
+                <h3>Emergency Preparedness</h3>
+                <p>Earthquake safety tips and emergency procedures</p>
+                <div class="card-arrow">→</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="seo-content">
+        <h2>Real-Time Earthquake Information</h2>
+        <p>Our platform provides comprehensive earthquake data sourced directly from the US Geological Survey (USGS). Get instant access to real-time seismic activity, including earthquake magnitude, depth, location, and timing information for any area in the United States.</p>
+        
+        <h3>Understanding Earthquake Data</h3>
+        <p>Earthquake information includes magnitude (Richter scale), depth, location coordinates, and timestamp. Magnitude indicates the energy released, while depth helps determine potential impact on the surface. Recent earthquakes are prioritized to provide the most current seismic activity data.</p>
+        
+        <h3>Safety and Preparedness</h3>
+        <p>While our platform provides valuable earthquake information, always follow official safety guidelines from local emergency management agencies. Have an emergency kit ready, know your evacuation routes, and stay informed about local emergency procedures.</p>
+        
+        <h3>Data Sources and Accuracy</h3>
+        <p>All earthquake data is sourced from the US Geological Survey's comprehensive seismic monitoring network. The USGS maintains thousands of seismometers across the country, providing real-time data on seismic activity. Information is updated continuously as new earthquakes are detected and analyzed.</p>
+        
+        <h3>Understanding Earthquake Magnitude</h3>
+        <ul>
+            <li><strong>Micro (0-2.0):</strong> Generally not felt, but recorded by seismographs</li>
+            <li><strong>Minor (2.0-3.9):</strong> Often felt, but rarely causes damage</li>
+            <li><strong>Light (4.0-4.9):</strong> Noticeable shaking, minor damage possible</li>
+            <li><strong>Moderate (5.0-5.9):</strong> Can cause damage to buildings</li>
+            <li><strong>Strong (6.0-6.9):</strong> Can cause severe damage in populated areas</li>
+            <li><strong>Major (7.0-7.9):</strong> Can cause serious damage over large areas</li>
+            <li><strong>Great (8.0+):</strong> Can cause serious damage in areas several hundred kilometers across</li>
+        </ul>
+        
+        <h3>Recent Seismic Activity</h3>
+        <p>Stay informed about recent earthquakes in your area. Our platform provides access to the latest seismic activity data, helping you understand patterns and trends in earthquake occurrence. This information is valuable for both personal safety and scientific understanding of regional seismic activity.</p>
+        
+        <h3>Emergency Preparedness</h3>
+        <p>In earthquake-prone areas, it's essential to be prepared. Create an emergency kit with water, food, first aid supplies, and important documents. Know how to turn off utilities and have a family emergency plan. Stay informed about local emergency procedures and evacuation routes.</p>
+    </div>
+</div>
+
+<style>
+    body {
+        background: transparent;
+        color: #2d2a26;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: transparent;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #2d2a26;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #2d2a26;
+    }
+
+    .header p {
+        font-size: 1.2rem;
+        color: #5a4f42;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cta-section {
+        text-align: center;
+        margin: 3rem 0;
+        padding: 2rem;
+        background: rgba(232, 213, 196, 0.9);
+        border-radius: 12px;
+        color: #2d2a26;
+    }
+
+    .cta-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #2d2a26;
+    }
+
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: #5a4f42;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background: #6b7c32;
+        color: white;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .cta-button:hover {
+        background: #5a6b2a;
+    }
+
+
+
+    .seo-content {
+        background: rgba(232, 213, 196, 0.9);
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 3rem;
+    }
+
+    .seo-content h2 {
+        color: #8B4513;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .seo-content h3 {
+        color: #A0522D;
+        font-size: 1.4rem;
+        margin: 2rem 0 1rem 0;
+        font-weight: 600;
+    }
+
+    .seo-content p {
+        color: #5a4f42;
+        margin-bottom: 1rem;
+        line-height: 1.7;
+    }
+
+    .seo-content ul {
+        color: #5a4f42;
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    .seo-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    .seo-content strong {
+        color: #8B4513;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .cta-section h2 {
+            font-size: 1.5rem;
+        }
+        
+        .seo-content h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+</Layout> 

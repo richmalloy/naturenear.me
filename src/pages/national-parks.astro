@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "National Parks Near Me - Discover America's Natural Treasures";
+const description = "Explore national parks near your location. Find hiking trails, scenic views, wildlife, and outdoor adventures in America's most beautiful protected areas.";
+---
+
+<Layout title={title} description={description} currentPage="parks">
+<div class="container">
+    <header class="header">
+        <h1>National Parks Near You</h1>
+        <p>Discover America's most beautiful protected areas and natural wonders</p>
+    </header>
+
+    <div class="cta-section">
+        <h2>Explore America's Natural Treasures</h2>
+        <p>Find national parks, hiking trails, scenic viewpoints, and outdoor adventures in your area. Experience the beauty and wonder of America's protected landscapes.</p>
+        <a href="/" class="cta-button">Find Parks Near Me</a>
+    </div>
+
+    <!-- Hotspot Cards Section -->
+    <div class="hotspot-cards">
+        <h2>Quick Access to Nature Data</h2>
+        <p>Explore different types of natural information and data near your location</p>
+        
+        <div class="cards-grid">
+            <!-- Parks Card -->
+            <a href="/national-parks" class="hotspot-card parks-card">
+                <div class="card-icon">🏞️</div>
+                <h3>National Parks</h3>
+                <p>Discover protected areas, hiking trails, and scenic viewpoints near you</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Wildlife Card -->
+            <a href="/wildlife" class="hotspot-card wildlife-card">
+                <div class="card-icon">🦅</div>
+                <h3>Wildlife & Nature</h3>
+                <p>Find local wildlife, insects, and natural habitats in your area</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Earthquakes Card -->
+            <a href="/earthquakes" class="hotspot-card earthquakes-card">
+                <div class="card-icon">🌋</div>
+                <h3>Earthquakes & Geology</h3>
+                <p>Explore seismic activity and geological formations near you</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Weather Card -->
+            <a href="/" class="hotspot-card weather-card">
+                <div class="card-icon">🌤️</div>
+                <h3>Weather & Climate</h3>
+                <p>Check current conditions and forecasts for outdoor activities</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Heritage Card -->
+            <a href="/" class="hotspot-card heritage-card">
+                <div class="card-icon">🏛️</div>
+                <h3>Cultural Heritage</h3>
+                <p>Discover historical sites and cultural landmarks in your region</p>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- Fossils Card -->
+            <a href="/" class="hotspot-card fossils-card">
+                <div class="card-icon">🦕</div>
+                <h3>Fossils & Paleontology</h3>
+                <p>Explore prehistoric discoveries and fossil sites near you</p>
+                <div class="card-arrow">→</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="seo-content">
+        <h2>Discover America's National Parks</h2>
+        <p>America's national parks represent some of the most spectacular natural landscapes on Earth. From towering mountains to pristine coastlines, from ancient forests to vast deserts, these protected areas preserve the country's most remarkable natural features and provide opportunities for recreation, education, and inspiration.</p>
+        
+        <h3>The National Park System</h3>
+        <p>The National Park Service manages over 400 units across all 50 states, including 63 national parks, as well as national monuments, historic sites, recreation areas, and other protected areas. These sites preserve natural and cultural resources while providing opportunities for public enjoyment and education.</p>
+        
+        <h3>Planning Your National Park Visit</h3>
+        <p>Successful national park visits require careful planning. Check current conditions, weather forecasts, and any alerts or closures before your trip. Make reservations for camping and lodging well in advance, especially during peak seasons. Pack appropriate gear for your activities and be prepared for changing weather conditions.</p>
+        
+        <h3>Responsible Recreation</h3>
+        <p>When visiting national parks, follow Leave No Trace principles to minimize your impact on the environment. Stay on designated trails, pack out all trash, respect wildlife from a safe distance, and be considerate of other visitors. Your actions help preserve these special places for future generations.</p>
+        
+        <h3>Seasonal Considerations</h3>
+        <p>Each season offers unique experiences in national parks. Spring brings wildflowers and newborn wildlife, summer provides long days for hiking and exploration, fall offers spectacular foliage and fewer crowds, and winter reveals snow-covered landscapes and opportunities for cross-country skiing and snowshoeing.</p>
+        
+        <h3>Wildlife and Nature Observation</h3>
+        <p>National parks provide excellent opportunities for wildlife viewing and nature observation. Many parks offer ranger-led programs, interpretive exhibits, and guided tours that enhance your understanding of the natural world. Remember to observe wildlife from a safe distance and never feed wild animals.</p>
+        
+        <h3>Photography and Art</h3>
+        <p>National parks inspire artists and photographers with their stunning landscapes and diverse wildlife. Whether you're a professional photographer or just enjoy capturing memories, parks offer endless opportunities for creative expression. Be patient and respectful when photographing wildlife and other visitors.</p>
+        
+        <h3>Conservation and Stewardship</h3>
+        <p>National parks face ongoing challenges from climate change, invasive species, and increasing visitation. By practicing responsible recreation and supporting conservation efforts, visitors can help protect these precious resources. Consider volunteering or donating to organizations that support national parks.</p>
+        
+        <h3>Accessibility and Inclusion</h3>
+        <p>Many national parks offer accessible facilities and programs for visitors with disabilities. Contact park staff in advance to learn about accessible trails, facilities, and programs. Parks are working to improve accessibility and provide meaningful experiences for all visitors.</p>
+    </div>
+</div>
+
+</Layout> 
